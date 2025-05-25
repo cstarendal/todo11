@@ -8,6 +8,6 @@
     "checkInterval": 30
   },
   "urls": {
-    "pipeline": "https://github.com/cstarendal/todo11/actions"
+    "pipeline": "https://github.com/cstarendal/task11/actions"
   }
 }

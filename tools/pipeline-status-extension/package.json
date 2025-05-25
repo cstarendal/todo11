@@ -1,6 +1,6 @@
 {
-  "name": "todo11-pipeline-status",
-  "displayName": "Todo11 Pipeline Status",
+  "name": "task11-pipeline-status",
+  "displayName": "Task11 Pipeline Status",
   "description": "Show GitHub Actions pipeline status in VS Code status bar",
   "version": "0.1.0",
   "engines": {
@@ -16,17 +16,17 @@
   "contributes": {
     "commands": [
       {
-        "command": "todo11-pipeline-status.checkStatus",
+        "command": "task11-pipeline-status.checkStatus",
         "title": "Check Pipeline Status"
       },
       {
-        "command": "todo11-pipeline-status.openPipeline",
+        "command": "task11-pipeline-status.openPipeline",
         "title": "Open Pipeline in Browser"
       }
     ],
     "keybindings": [
       {
-        "command": "todo11-pipeline-status.checkStatus",
+        "command": "task11-pipeline-status.checkStatus",
         "key": "ctrl+shift+p",
         "mac": "cmd+shift+p"
       }

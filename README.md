@@ -1,7 +1,7 @@
 # Task App - Hexagonal Architecture with File-Sync
 
-[![CI/CD Pipeline](https://github.com/cstarendal/todo11/actions/workflows/ci.yml/badge.svg)](https://github.com/cstarendal/todo11/actions/workflows/ci.yml)
-[![Latest Commit](https://github.com/cstarendal/todo11/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cstarendal/todo11/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/cstarendal/task11/actions/workflows/ci.yml/badge.svg)](https://github.com/cstarendal/task11/actions/workflows/ci.yml)
+[![Latest Commit](https://github.com/cstarendal/task11/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cstarendal/task11/actions/workflows/ci.yml)
 
 En testdriven task-applikation med hexagonal arkitektur och file-sync för NAS-lagring.
 
@@ -82,7 +82,7 @@ För att följa TDD-arbetsflödet är det obligatoriskt att kontrollera pipeline
    - Kör `./pipeline-status.sh` för att starta en monitor som uppdateras var 10:e sekund
    - Kör `./pipeline-status.sh --mock` för testläge utan GitHub API-anrop
 
-![Pipeline Status](https://img.shields.io/github/workflow/status/cstarendal/todo11/CI%2FCD%20Pipeline?label=Pipeline%20Status&style=for-the-badge)
+![Pipeline Status](https://img.shields.io/github/workflow/status/cstarendal/task11/CI%2FCD%20Pipeline?label=Pipeline%20Status&style=for-the-badge)
 
 ### 🔧 Konfigurera Pipeline-checker
 
@@ -93,7 +93,7 @@ Om du använder ett privat GitHub-repo behöver du konfigurera en GitHub token:
 export GITHUB_TOKEN="your-personal-access-token"
 ```
 
-För att ändra reponamn (från standardvärdet `cstarendal/todo11`), använd uppdateringsverktyget:
+För att ändra reponamn (från standardvärdet `cstarendal/task11`), använd uppdateringsverktyget:
 
 ```bash
 # Uppdatera alla filer med det nya reponamnet
@@ -108,8 +108,8 @@ Du kan också manuellt ändra följande filer:
 
 ```bash
 # Klona och installera
-git clone https://github.com/cstarendal/todo-app.git
-cd todo-app
+git clone https://github.com/cstarendal/task-app.git
+cd task-app
 npm install
 
 # Kör tester

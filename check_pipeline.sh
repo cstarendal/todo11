@@ -16,7 +16,7 @@ BOLD="\033[1m"
 # Banner
 echo -e "${BOLD}${BLUE}"
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║                   TODO11 PIPELINE CHECK                    ║"
+echo "║                   TASK11 PIPELINE CHECK                    ║"
 echo "╚════════════════════════════════════════════════════════════╝${RESET}"
 
 # Process command-line arguments

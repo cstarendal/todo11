@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: /Users/cstarendal/Resilio Sync/Code/TODO 11/quickstart.sh
+# filepath: /Users/cstarendal/Resilio Sync/Code/TASK 11/quickstart.sh
 
 # Quickstart guide för pipeline-övervakningssystemet
 # Användning: ./quickstart.sh
@@ -17,7 +17,7 @@ BOLD="\033[1m"
 # Banner
 echo -e "${BOLD}${BLUE}"
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║                TODO11 PIPELINE QUICKSTART                  ║"
+echo "║                TASK11 PIPELINE QUICKSTART                  ║"
 echo "╚════════════════════════════════════════════════════════════╝${RESET}"
 
 # Kontrollera om repo är konfigurerat
@@ -29,7 +29,7 @@ check_repo_config() {
   
   if [ -z "$REMOTE_URL" ]; then
     echo -e "${YELLOW}⚠️ Inget git remote hittat.${RESET}"
-    echo -e "${YELLOW}Standard reponamn 'cstarendal/todo11' kommer att användas.${RESET}"
+    echo -e "${YELLOW}Standard reponamn 'cstarendal/task11' kommer att användas.${RESET}"
     echo -e "${YELLOW}Du kan uppdatera detta senare med './update-repo-name.sh nytt/repo'${RESET}"
   else
     # Extrahera reponamn från git remote URL
@@ -37,8 +37,8 @@ check_repo_config() {
     echo -e "${GREEN}✓ Git remote hittad: $REPO_NAME${RESET}"
     
     # Kontrollera om det skiljer sig från standard
-    if [ "$REPO_NAME" != "cstarendal/todo11" ]; then
-      echo -e "\n${YELLOW}⚠️ Ditt reponamn '$REPO_NAME' skiljer sig från standardnamnet 'cstarendal/todo11'.${RESET}"
+    if [ "$REPO_NAME" != "cstarendal/task11" ]; then
+      echo -e "\n${YELLOW}⚠️ Ditt reponamn '$REPO_NAME' skiljer sig från standardnamnet 'cstarendal/task11'.${RESET}"
       echo -e "${YELLOW}Vill du uppdatera alla konfigurationsfiler med ditt reponamn? (j/n)${RESET}"
       read -r answer
       if [[ "$answer" =~ ^[Jj] ]]; then

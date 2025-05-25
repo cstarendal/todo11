@@ -14,18 +14,18 @@ const STATUS_FILE = '.pipeline-status.json';
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-    console.log('Todo11 Pipeline Status extension is now active!');
+    console.log('Task11 Pipeline Status extension is now active!');
     
     // Create status bar item
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-    statusBarItem.command = 'todo11-pipeline-status.openPipeline';
+    statusBarItem.command = 'task11-pipeline-status.openPipeline';
     statusBarItem.text = '$(sync~spin) Checking CI/CD...';
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
     
     // Register commands
-    const checkStatusCmd = vscode.commands.registerCommand('todo11-pipeline-status.checkStatus', runPipelineCheck);
-    const openPipelineCmd = vscode.commands.registerCommand('todo11-pipeline-status.openPipeline', openPipelineInBrowser);
+    const checkStatusCmd = vscode.commands.registerCommand('task11-pipeline-status.checkStatus', runPipelineCheck);
+    const openPipelineCmd = vscode.commands.registerCommand('task11-pipeline-status.openPipeline', openPipelineInBrowser);
     
     context.subscriptions.push(checkStatusCmd);
     context.subscriptions.push(openPipelineCmd);

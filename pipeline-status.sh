@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: /Users/cstarendal/Resilio Sync/Code/TODO 11/pipeline-status.sh
+# filepath: /Users/cstarendal/Resilio Sync/Code/TASK 11/pipeline-status.sh
 
 # Enkel pipeline-statusmonitor som uppdateras automatiskt
 # Användning: ./pipeline-status.sh [--mock]

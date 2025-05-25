@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Konfiguration
-const REPO = process.env.GITHUB_REPO || 'cstarendal/todo11'; // Kan överskrivas med miljövariabel
+const REPO = process.env.GITHUB_REPO || 'cstarendal/task11'; // Kan överskrivas med miljövariabel
 const BRANCH = process.env.GITHUB_BRANCH || 'main';
 const STATUS_FILE = path.join(__dirname, '..', '.pipeline-status.json');
 const PERSONAL_ACCESS_TOKEN = process.env.GITHUB_TOKEN || '';  // GitHub Personal Access Token för privata repos

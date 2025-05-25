@@ -1,7 +1,7 @@
 #!/bin/bash
 # filepath: /Users/cstarendal/Resilio Sync/Code/TODO 11/dev.sh
 
-# Todo11 - Utvecklarkontrollpanel
+# Task11 - Utvecklarkontrollpanel
 # Användning: ./dev.sh [kommando]
 
 # Färger
@@ -27,7 +27,7 @@ show_banner() {
   clear
   echo -e "${BOLD}${BLUE}"
   echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║                TODO11 UTVECKLINGSKONSOL                    ║"
+  echo "║                TASK11 UTVECKLINGSKONSOL                    ║"
   echo "╚════════════════════════════════════════════════════════════╝${RESET}"
   echo -e "${BOLD}${CYAN}Användare:${RESET} $USER_NAME"
   echo -e "${BOLD}${CYAN}Projekt:${RESET} $REPO_NAME"
@@ -65,7 +65,7 @@ run_action() {
       ;;
     3) 
       echo "Öppnar pipeline i webbläsaren..."
-      open "https://github.com/cstarendal/todo11/actions"
+      open "https://github.com/cstarendal/task11/actions"
       ;;
     4) 
       echo -e "\n${BOLD}${CYAN}Kör tester...${RESET}\n"
@@ -170,7 +170,7 @@ show_pipeline_history() {
   fi
 
   # Get the repository from the git remote, or use default
-  REMOTE_URL=$(git config --get remote.origin.url || echo "cstarendal/todo11")
+  REMOTE_URL=$(git config --get remote.origin.url || echo "cstarendal/task11")
   REPO_NAME=$(echo $REMOTE_URL | sed -E 's|.*github.com[:/]([^/]+/[^/.]+).*|\1|')
   
   # Use curl to fetch the workflow runs
@@ -259,7 +259,7 @@ debug_pipeline_api() {
   fi
   
   # Get the repository from the git remote, or use default
-  REMOTE_URL=$(git config --get remote.origin.url || echo "cstarendal/todo11")
+  REMOTE_URL=$(git config --get remote.origin.url || echo "cstarendal/task11")
   REPO_NAME=$(echo $REMOTE_URL | sed -E 's|.*github.com[:/]([^/]+/[^/.]+).*|\1|')
   
   echo -e "${YELLOW}Repo: ${REPO_NAME}${RESET}"

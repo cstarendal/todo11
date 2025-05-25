@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: /Users/cstarendal/Resilio Sync/Code/TODO 11/demo-pipeline-tools.sh
+# filepath: /Users/cstarendal/Resilio Sync/Code/TASK 11/demo-pipeline-tools.sh
 
 # Demo av olika pipeline-övervakningsverktyg
 # Användning: ./demo-pipeline-tools.sh
@@ -17,7 +17,7 @@ BOLD="\033[1m"
 clear
 echo -e "${BOLD}${BLUE}"
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║            TODO11 PIPELINE TOOLS DEMONSTRATION             ║"
+echo "║            TASK11 PIPELINE TOOLS DEMONSTRATION             ║"
 echo "╚════════════════════════════════════════════════════════════╝${RESET}"
 
 # Funktioner
@@ -76,10 +76,10 @@ demo_dev_console() {
   
   # Simulera menu från dev.sh
   echo -e "${BOLD}${BLUE}╔════════════════════════════════════════════════════════════╗"
-  echo "║                TODO11 UTVECKLINGSKONSOL                    ║"
+  echo "║                TASK11 UTVECKLINGSKONSOL                    ║"
   echo "╚════════════════════════════════════════════════════════════╝${RESET}"
   echo -e "${BOLD}${CYAN}Användare:${RESET} Demo User"
-  echo -e "${BOLD}${CYAN}Projekt:${RESET} TODO 11"
+  echo -e "${BOLD}${CYAN}Projekt:${RESET} TASK 11"
   echo -e "${BOLD}${CYAN}Branch:${RESET} main | ${BOLD}${CYAN}Commit:${RESET} abc1234"
   echo -e "${BOLD}${CYAN}Datum:${RESET} 2023-05-25 15:00:00"
   echo -e "${BOLD}${CYAN}──────────────────────────────────────────────────────────────${RESET}\n"
@@ -121,7 +121,7 @@ demo_continuous_monitoring() {
   echo -e "${BOLD}Result:${RESET} ${GREEN}Success✓${RESET}"
   echo -e "${BOLD}Commit:${RESET} abc1234 ${GREEN}(current)${RESET}"
   echo -e "${BOLD}Updated:${RESET} 2023-05-25 14:30:21"
-  echo -e "${BOLD}Details:${RESET} https://github.com/cstarendal/todo11/actions/runs/123456789"
+  echo -e "${BOLD}Details:${RESET} https://github.com/cstarendal/task11/actions/runs/123456789"
   echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}\n"
   echo -e "${BOLD}${GREEN}✅ Pipeline GRÖN - Säkert att fortsätta med nästa TDD-cykel!${RESET}"
   
@@ -156,7 +156,7 @@ demo_repo_update() {
   echo -e "╔════════════════════════════════════════════════════════════╗"
   echo -e "║                  UPPDATERA REPONAMN                       ║"
   echo -e "╚════════════════════════════════════════════════════════════╝${RESET}"
-  echo -e "\n${BOLD}${CYAN}Ändrar reponamn från:${RESET} cstarendal/todo11 ${BOLD}${CYAN}till:${RESET} nytt/reponamn\n"
+  echo -e "\n${BOLD}${CYAN}Ändrar reponamn från:${RESET} cstarendal/task11 ${BOLD}${CYAN}till:${RESET} nytt/reponamn\n"
   
   echo -e "${YELLOW}Detta verktyg uppdaterar automatiskt reponamnet i alla skript.${RESET}"
   echo -e "${YELLOW}Det är användbart när du förkar eller flyttar projektet.${RESET}"

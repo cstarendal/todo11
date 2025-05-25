@@ -4,7 +4,7 @@ const https = require('https');
 const { execSync } = require('child_process');
 
 // Konfiguration
-const REPO = process.env.GITHUB_REPO || 'cstarendal/todo11';
+const REPO = process.env.GITHUB_REPO || 'cstarendal/task11';
 const PERSONAL_ACCESS_TOKEN = process.env.GITHUB_TOKEN || '';
 const RUNS_TO_SHOW = process.argv.includes('--all') ? 20 : 10;
 
