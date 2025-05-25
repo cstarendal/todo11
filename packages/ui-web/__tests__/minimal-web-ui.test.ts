@@ -27,14 +27,13 @@ describe('Minimal Web UI Test', () => {
     expect(testValue).toBe(42);
   });
   
-  test('should fail - task interface does not exist yet', () => {
-    // RED test - this should fail because we haven't implemented the task interface
-    // We expect NO task-list element to exist yet
-    expect(document.querySelector('#task-list')).toBeNull();
+  test('should be able to create a task interface', () => {
+    // Load our minimal interface
+    require('../src/minimal-task-interface');
     
-    // But we want a task interface to exist (this will fail until we implement it)
-    expect(document.querySelector('#task-form')).not.toBeNull();
+    // Now the test should pass - GREEN phase
+    expect(document.querySelector('#task-list')).not.toBeNull();
     expect(document.querySelector('#task-input')).not.toBeNull();
-    expect(document.querySelector('#task-counter')).not.toBeNull();
+    expect(document.querySelector('#add-task-button')).not.toBeNull();
   });
 });

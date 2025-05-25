@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task11 - Minimal Task App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      #task-list {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-top: 20px;
+        min-height: 100px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎯 Task11 - Minimal Task App</h1>
+      <p>This is the minimal task management interface.</p>
+      
+      <!-- The element our test expects -->
+      <div id="task-list">
+        <p>No tasks yet. Task functionality coming soon!</p>
+      </div>
+    </div>
+    
+    <script>
+      // Basic JavaScript to verify the page works
+      console.log('Task11 minimal app loaded successfully!');
+      
+      // Add a simple interaction
+      document.addEventListener('DOMContentLoaded', () => {
+        const taskList = document.getElementById('task-list');
+        if (taskList) {
+          console.log('Task list element found and ready!');
+        }
+      });
+    </script>
+  </body>
+</html>
