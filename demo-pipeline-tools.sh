@@ -31,6 +31,13 @@ demo_basic_check() {
   read -p "Tryck ENTER för att fortsätta..."
 }
 
+demo_red_pipeline_warning() {
+  echo -e "\n${BOLD}${RED}⚠️  Pipeline-status: MISSLYCKAD (RED)${RESET}"
+  echo -e "${RED}Du kan INTE gå vidare till nästa TDD-cykel förrän pipelinen är grön!${RESET}"
+  echo -e "${YELLOW}Åtgärda felen och kör om testerna innan du committar igen.${RESET}"
+  read -p "Tryck ENTER för att fortsätta..."
+}
+
 demo_detailed_check() {
   echo -e "\n${BOLD}${CYAN}2. Detaljerad pipeline-kontroll${RESET}"
   echo -e "${CYAN}----------------------------${RESET}"
@@ -187,6 +194,7 @@ demo_summary() {
 
 # Kör alla demo-steg
 demo_basic_check
+demo_red_pipeline_warning
 clear
 demo_detailed_check
 clear
