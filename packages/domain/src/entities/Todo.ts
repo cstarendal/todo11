@@ -8,16 +8,34 @@ export class Todo {
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
 
-  constructor(title: string) {
+  constructor(
+    title: string,
+    id?: string,
+    description?: string,
+    completed?: boolean,
+    createdAt?: Date,
+    updatedAt?: Date
+  ) {
     if (!title || title.trim().length === 0) {
       throw new Error('Todo title cannot be empty');
     }
     
-    this.id = randomUUID();
+    this.id = id || randomUUID();
     this.title = title.trim();
-    this.description = '';
-    this.completed = false;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this.description = description || '';
+    this.completed = completed || false;
+    this.createdAt = createdAt || new Date();
+    this.updatedAt = updatedAt || new Date();
+  }
+
+  toggle(): Todo {
+    return new Todo(
+      this.title,
+      this.id,
+      this.description,
+      !this.completed,
+      this.createdAt,
+      new Date()
+    );
   }
 }
