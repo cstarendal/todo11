@@ -1,7 +1,7 @@
 # Todo App - Hexagonal Architecture with File-Sync
 
-[![CI/CD Pipeline](https://github.com/cstarendal/todo-app/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/cstarendal/todo-app/actions)
-[![codecov](https://codecov.io/gh/cstarendal/todo-app/branch/main/graph/badge.svg)](https://codecov.io/gh/cstarendal/todo-app)
+[![CI/CD Pipeline](https://github.com/cstarendal/todo11/actions/workflows/ci.yml/badge.svg)](https://github.com/cstarendal/todo11/actions/workflows/ci.yml)
+[![Latest Commit](https://github.com/cstarendal/todo11/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cstarendal/todo11/actions/workflows/ci.yml)
 
 En testdriven todo-applikation med hexagonal arkitektur och file-sync för NAS-lagring.
 
@@ -48,6 +48,61 @@ packages/
 - [ ] **Phase 3**: Electron desktop app
 - [ ] **Phase 4**: iOS app
 - [ ] **Phase 5**: Multi-user + encryption
+
+## 🚦 Pipeline Status Check
+
+För att följa TDD-arbetsflödet är det obligatoriskt att kontrollera pipeline-statusen innan du fortsätter med nästa TDD-cykel. Du har flera alternativ:
+
+1. **Terminal**: 
+   - Kör `./check_pipeline.sh` för att kontrollera mot GitHub API
+   - Kör `./check_pipeline.sh --mock` för lokalt testläge utan GitHub API
+   - Kör `./check_pipeline.sh --jobs` för att visa detaljer om pipeline-jobb
+   - Kör `./check_pipeline.sh --jobs --steps` för fullständig information om steg
+   - Kör `./pipeline-visualize.sh` för grafisk visning av pipeline-historik
+
+2. **Utvecklingskonsolen**:
+   - Kör `./dev.sh` för att öppna utvecklingskonsolen
+   - Välj "Kontrollera pipeline-status" för att kontrollera aktuell status
+   - Välj "Visualisera pipeline-körningar" för grafisk historik
+   - Välj "Pipeline historik" för tabellarisk visning av körningar
+   - Välj "Debug pipeline" för att undersöka API-svaret
+
+3. **VS Code Tasks**: 
+   - `Tasks: Run Task` → "Check Pipeline Status" - kontrollerar mot GitHub API
+   - `Tasks: Run Task` → "Check Pipeline Status (Mock)" - använder testdata
+   - `Tasks: Run Task` → "Visualize Pipeline History" - visuell tidslinje
+   - `Tasks: Run Task` → "Show Pipeline Details" - detaljerad info om jobb och steg
+   - `Tasks: Run Task` → "Open Pipeline in Browser" - öppnar GitHub Actions i webbläsaren
+
+4. **Status Bar**: Med Pipeline Status Extension installerad kan du se status direkt i VS Code's status bar
+   - Klicka på statusen i statusraden för att öppna pipeline i webbläsaren
+   - Statusen uppdateras automatiskt var 30:e sekund
+
+5. **Kontinuerlig övervakning**:
+   - Kör `./pipeline-status.sh` för att starta en monitor som uppdateras var 10:e sekund
+   - Kör `./pipeline-status.sh --mock` för testläge utan GitHub API-anrop
+
+![Pipeline Status](https://img.shields.io/github/workflow/status/cstarendal/todo11/CI%2FCD%20Pipeline?label=Pipeline%20Status&style=for-the-badge)
+
+### 🔧 Konfigurera Pipeline-checker
+
+Om du använder ett privat GitHub-repo behöver du konfigurera en GitHub token:
+
+```bash
+# Exportera en personlig access token för att få åtkomst till privata repos
+export GITHUB_TOKEN="your-personal-access-token"
+```
+
+För att ändra reponamn (från standardvärdet `cstarendal/todo11`), använd uppdateringsverktyget:
+
+```bash
+# Uppdatera alla filer med det nya reponamnet
+./update-repo-name.sh "dittanvändarnamn/dittrepo" 
+```
+
+Du kan också manuellt ändra följande filer:
+- `scripts/check-pipeline.js` - ändra `REPO` konstanten
+- `.vscode/tasks.json` - uppdatera "Open Pipeline in Browser" URL
 
 ## 🛠️ Kom igång
 

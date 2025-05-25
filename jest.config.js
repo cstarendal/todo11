@@ -6,6 +6,7 @@ module.exports = {
   collectCoverageFrom: [
     'packages/*/src/**/*.ts',
     '!packages/*/src/**/*.d.ts',
+    '!packages/*/src/index.ts',
   ],
   coverageThreshold: {
     global: {

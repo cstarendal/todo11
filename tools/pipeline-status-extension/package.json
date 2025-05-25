@@ -1,0 +1,50 @@
+{
+  "name": "todo11-pipeline-status",
+  "displayName": "Todo11 Pipeline Status",
+  "description": "Show GitHub Actions pipeline status in VS Code status bar",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/.pipeline-status.json"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "todo11-pipeline-status.checkStatus",
+        "title": "Check Pipeline Status"
+      },
+      {
+        "command": "todo11-pipeline-status.openPipeline",
+        "title": "Open Pipeline in Browser"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "todo11-pipeline-status.checkStatus",
+        "key": "ctrl+shift+p",
+        "mac": "cmd+shift+p"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "echo 'No compilation needed for JavaScript extension'",
+    "watch": "echo 'No watch needed for JavaScript extension'",
+    "lint": "echo 'No linting configured'",
+    "pretest": "npm run compile",
+    "test": "echo 'No tests configured'"
+  },
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.0",
+    "@types/vscode": "^1.60.0"
+  }
+}

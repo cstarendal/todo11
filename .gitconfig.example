@@ -1,0 +1,55 @@
+# Example .gitconfig settings for Todo11 project
+# Copy relevant parts to your global ~/.gitconfig
+
+[user]
+    name = Your Name
+    email = your.email@example.com
+
+[alias]
+    # Check pipeline status
+    pipeline = "!f() { node \"$(git rev-parse --show-toplevel)/scripts/check-pipeline.js\"; }; f"
+    pipeline-mock = "!f() { node \"$(git rev-parse --show-toplevel)/scripts/check-pipeline.js\" --mock; }; f"
+    
+    # TDD workflow helpers
+    tdd-red = "!f() { git add . && git commit -m \"test: RED - $1\"; }; f"
+    tdd-green = "!f() { git add . && git commit -m \"feat: GREEN - $1\"; }; f"
+    tdd-refactor = "!f() { git add . && git commit -m \"refactor: REFACTOR - $1\"; }; f"
+    
+    # TDD full cycle
+    tdd-cycle = "!f() { \
+        echo 'Starting TDD cycle for: '$1; \
+        read -p 'Write failing test and press enter...' && \
+        git add . && git commit -m \"test: RED - $1\" && \
+        read -p 'Implement minimal code to pass test and press enter...' && \
+        git add . && git commit -m \"feat: GREEN - $1\" && \
+        read -p 'Refactor code while keeping tests green and press enter...' && \
+        git add . && git commit -m \"refactor: REFACTOR - $1\" && \
+        ./check_pipeline.sh; \
+    }; f"
+    
+    # Todo app specific
+    todo-dev = "!f() { \"$(git rev-parse --show-toplevel)/dev.sh\"; }; f"
+    
+    # Quick status
+    s = status -s
+    
+    # Formatted log
+    l = log --pretty=format:'%C(yellow)%h%Creset %C(blue)%ad%Creset %C(green)%<(10,trunc)%an%Creset %s%C(red)%d%Creset' --date=short
+    
+    # TDD log - shows only TDD commits
+    tdd-log = "log --pretty=format:'%C(yellow)%h%Creset %C(blue)%ad%Creset %s%C(red)%d%Creset' --date=short --grep='RED\\|GREEN\\|REFACTOR'"
+
+[core]
+    editor = code --wait
+    
+[pull]
+    rebase = true
+    
+[push]
+    default = current
+    
+[commit]
+    template = ~/.gitmessage
+    
+[init]
+    defaultBranch = main
