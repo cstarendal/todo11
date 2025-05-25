@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import { Task } from '../../../domain/src/entities/Task';
 import { ToggleTaskUseCase } from '../../src/ToggleTaskUseCase';
 import { InMemoryTaskRepository } from '../../../shared/src/interfaces/ITaskRepository';
@@ -31,5 +32,12 @@ describe('ToggleTaskUseCase Integration Test', () => {
     const allTasks = await repository.getAll();
     const persistedTask = allTasks.find(t => t.id === task.id);
     expect(persistedTask?.completed).toBe(true);
+  });
+
+  it('should throw error when task is not found', async () => {
+    // Act & Assert
+    await expect(useCase.execute('non-existent-id'))
+      .rejects
+      .toThrow('Task not found');
   });
 });

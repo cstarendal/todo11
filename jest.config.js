@@ -7,6 +7,7 @@ module.exports = {
     'packages/*/src/**/*.ts',
     '!packages/*/src/**/*.d.ts',
     '!packages/*/src/index.ts',
+    '!packages/ui-web/src/vanilla-app.ts', // Exclude vanilla-app.ts
   ],
   coverageThreshold: {
     global: {

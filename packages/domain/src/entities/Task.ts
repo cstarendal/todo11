@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 interface TaskProperties {
   id?: string;
@@ -32,7 +32,7 @@ export class Task {
       throw new Error('Task title cannot be empty');
     }
     
-    this.id = id || randomUUID();
+    this.id = id || uuidv4();
     this.title = title.trim();
     this.description = description || '';
     this.completed = completed || false;
