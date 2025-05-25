@@ -31,7 +31,7 @@ jobs:
       run: npm run lint
       
     - name: Run type checking
-      run: npx tsc --build --noEmit
+      run: npx tsc --build
       
     - name: Run tests with coverage
       run: npm run test:coverage
