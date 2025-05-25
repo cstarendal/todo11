@@ -1,9 +1,9 @@
-# Todo App - Hexagonal Architecture with File-Sync
+# Task App - Hexagonal Architecture with File-Sync
 
 [![CI/CD Pipeline](https://github.com/cstarendal/todo11/actions/workflows/ci.yml/badge.svg)](https://github.com/cstarendal/todo11/actions/workflows/ci.yml)
 [![Latest Commit](https://github.com/cstarendal/todo11/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cstarendal/todo11/actions/workflows/ci.yml)
 
-En testdriven todo-applikation med hexagonal arkitektur och file-sync för NAS-lagring.
+En testdriven task-applikation med hexagonal arkitektur och file-sync för NAS-lagring.
 
 ## 🏗️ Arkitektur
 
@@ -11,7 +11,7 @@ En testdriven todo-applikation med hexagonal arkitektur och file-sync för NAS-l
 
 ```
 packages/
-├── domain/                    # Entities, Value Objects (Todo, User)
+├── domain/                    # Entities, Value Objects (Task, User)
 ├── application/               # Use Cases med dependency injection  
 ├── infrastructure/            # File repositories, encryption, watchers
 ├── shared/interfaces/         # Platform-agnostic contracts
@@ -22,7 +22,7 @@ packages/
 
 ## 🔄 Storage Strategi
 
-- **File-sync baserat**: JSON-filer i `~/Synology Drive/TodoApp/`
+- **File-sync baserat**: JSON-filer i `~/Synology Drive/TaskApp/`
 - **Offline-first**: Fungerar utan nätverk, synkar automatiskt
 - **Multi-device**: File watchers detekterar ändringar från andra enheter
 - **Encryption-ready**: Interfaces förberedda för kryptering
@@ -43,7 +43,7 @@ packages/
 
 ## 📋 Progression
 
-- [x] **Phase 1**: Core domain (Todo entity) ← *Vi är här*
+- [x] **Phase 1**: Core domain (Task entity) ← *Vi är här*
 - [ ] **Phase 2**: Web app (React UI)
 - [ ] **Phase 3**: Electron desktop app
 - [ ] **Phase 4**: iOS app

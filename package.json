@@ -1,5 +1,5 @@
 {
-  "name": "todo-app",
+  "name": "task-app",
   "version": "0.1.0",
   "private": true,
   "workspaces": [

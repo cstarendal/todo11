@@ -1,1 +1,1 @@
-export { Todo } from './entities/Todo';
+export { Task } from './entities/Task';

@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 
-interface TodoProperties {
+interface TaskProperties {
   id?: string;
   title: string;
   description?: string;
@@ -10,7 +10,7 @@ interface TodoProperties {
   dueDate?: Date;
 }
 
-export class Todo {
+export class Task {
   public readonly id: string;
   public readonly title: string;
   public readonly description: string;
@@ -29,7 +29,7 @@ export class Todo {
     dueDate?: Date
   ) {
     if (!title || title.trim().length === 0) {
-      throw new Error('Todo title cannot be empty');
+      throw new Error('Task title cannot be empty');
     }
     
     this.id = id || randomUUID();
@@ -41,8 +41,8 @@ export class Todo {
     this.dueDate = dueDate;
   }
 
-  private clone(changes: Partial<TodoProperties>): Todo {
-    return new Todo(
+  private clone(changes: Partial<TaskProperties>): Task {
+    return new Task(
       changes.title ?? this.title,
       changes.id ?? this.id,
       changes.description ?? this.description,
@@ -53,15 +53,15 @@ export class Todo {
     );
   }
 
-  toggle(): Todo {
+  toggle(): Task {
     return this.clone({ completed: !this.completed });
   }
   
-  setDueDate(dueDate: Date): Todo {
+  setDueDate(dueDate: Date): Task {
     return this.clone({ dueDate });
   }
   
-  clearDueDate(): Todo {
+  clearDueDate(): Task {
     return this.clone({ dueDate: undefined });
   }
 }
