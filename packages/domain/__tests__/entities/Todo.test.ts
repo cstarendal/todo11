@@ -11,4 +11,12 @@ describe('Todo', () => {
     expect(todo.createdAt).toBeInstanceOf(Date);
     expect(todo.updatedAt).toBeInstanceOf(Date);
   });
+
+  it('should throw error when title is empty', () => {
+    expect(() => new Todo('')).toThrow('Todo title cannot be empty');
+  });
+
+  it('should throw error when title is only whitespace', () => {
+    expect(() => new Todo('   ')).toThrow('Todo title cannot be empty');
+  });
 });

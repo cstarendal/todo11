@@ -9,8 +9,12 @@ export class Todo {
   public readonly updatedAt: Date;
 
   constructor(title: string) {
+    if (!title || title.trim().length === 0) {
+      throw new Error('Todo title cannot be empty');
+    }
+    
     this.id = randomUUID();
-    this.title = title;
+    this.title = title.trim();
     this.description = '';
     this.completed = false;
     this.createdAt = new Date();
