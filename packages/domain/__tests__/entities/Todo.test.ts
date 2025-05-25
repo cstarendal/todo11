@@ -38,4 +38,39 @@ describe('Todo', () => {
     const incompleteTodo = completedTodo.toggle();
     expect(incompleteTodo.completed).toBe(false);
   });
+  
+  it('should create a Todo with optional due date', () => {
+    const dueDate = new Date('2025-12-31');
+    const todo = new Todo('Buy groceries', undefined, undefined, undefined, undefined, undefined, dueDate);
+    
+    expect(todo.dueDate).toBe(dueDate);
+  });
+  
+  it('should create a Todo without due date by default', () => {
+    const todo = new Todo('Buy groceries');
+    
+    expect(todo.dueDate).toBeUndefined();
+  });
+  
+  it('should be able to set due date', () => {
+    const todo = new Todo('Buy groceries');
+    const dueDate = new Date('2025-12-31');
+    
+    const todoWithDueDate = todo.setDueDate(dueDate);
+    
+    expect(todoWithDueDate.dueDate).toBe(dueDate);
+    expect(todoWithDueDate.id).toBe(todo.id); // Same identity
+    expect(todoWithDueDate.updatedAt).not.toBe(todo.updatedAt); // Timestamp updated
+  });
+  
+  it('should be able to clear due date', () => {
+    const dueDate = new Date('2025-12-31');
+    const todo = new Todo('Buy groceries', undefined, undefined, undefined, undefined, undefined, dueDate);
+    
+    const todoWithoutDueDate = todo.clearDueDate();
+    
+    expect(todoWithoutDueDate.dueDate).toBeUndefined();
+    expect(todoWithoutDueDate.id).toBe(todo.id); // Same identity
+    expect(todoWithoutDueDate.updatedAt).not.toBe(todo.updatedAt); // Timestamp updated
+  });
 });

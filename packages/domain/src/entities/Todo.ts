@@ -1,5 +1,15 @@
 import { randomUUID } from 'crypto';
 
+interface TodoProperties {
+  id?: string;
+  title: string;
+  description?: string;
+  completed?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  dueDate?: Date;
+}
+
 export class Todo {
   public readonly id: string;
   public readonly title: string;
@@ -7,6 +17,7 @@ export class Todo {
   public readonly completed: boolean;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
+  public readonly dueDate?: Date;
 
   constructor(
     title: string,
@@ -14,7 +25,8 @@ export class Todo {
     description?: string,
     completed?: boolean,
     createdAt?: Date,
-    updatedAt?: Date
+    updatedAt?: Date,
+    dueDate?: Date
   ) {
     if (!title || title.trim().length === 0) {
       throw new Error('Todo title cannot be empty');
@@ -26,16 +38,30 @@ export class Todo {
     this.completed = completed || false;
     this.createdAt = createdAt || new Date();
     this.updatedAt = updatedAt || new Date();
+    this.dueDate = dueDate;
+  }
+
+  private clone(changes: Partial<TodoProperties>): Todo {
+    return new Todo(
+      changes.title ?? this.title,
+      changes.id ?? this.id,
+      changes.description ?? this.description,
+      changes.completed ?? this.completed,
+      changes.createdAt ?? this.createdAt,
+      changes.updatedAt ?? new Date(),
+      'dueDate' in changes ? changes.dueDate : this.dueDate
+    );
   }
 
   toggle(): Todo {
-    return new Todo(
-      this.title,
-      this.id,
-      this.description,
-      !this.completed,
-      this.createdAt,
-      new Date()
-    );
+    return this.clone({ completed: !this.completed });
+  }
+  
+  setDueDate(dueDate: Date): Todo {
+    return this.clone({ dueDate });
+  }
+  
+  clearDueDate(): Todo {
+    return this.clone({ dueDate: undefined });
   }
 }
