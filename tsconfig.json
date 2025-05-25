@@ -13,12 +13,22 @@
     "declarationMap": true,
     "sourceMap": true,
     "composite": true,
-    "incremental": true
+    "incremental": true,
+    "allowJs": true
   },
   "references": [
     { "path": "./packages/domain" },
     { "path": "./packages/application" },
     { "path": "./packages/infrastructure" },
     { "path": "./packages/shared" }
+  ],
+  "exclude": [
+    "coverage/**",
+    "tools/**",
+    "scripts/**",
+    "jest.config.js",
+    "**/dist/**",
+    "**/node_modules/**",
+    "packages/ui-web/**"
   ]
 }

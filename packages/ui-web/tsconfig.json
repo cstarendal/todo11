@@ -6,7 +6,9 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "composite": true,
+    
+    /* React */
+    "jsx": "react-jsx",
     
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -14,7 +16,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     
     /* Linting */
     "strict": true,
@@ -27,6 +28,5 @@
     { "path": "../shared" },
     { "path": "../application" }
   ],
-  "include": ["src"],
-  "exclude": ["dist"]
+  "include": ["src"]
 }
