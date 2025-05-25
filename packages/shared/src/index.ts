@@ -1,1 +1,1 @@
-// Initial setup - reserved for shared interfaces
+export { ITaskRepository, InMemoryTaskRepository } from './interfaces/ITaskRepository';
