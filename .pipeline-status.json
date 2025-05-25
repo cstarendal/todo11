@@ -1,9 +1,10 @@
 {
   "status": "completed",
   "conclusion": "success",
-  "url": "https://github.com/cstarendal/todo11/actions/runs/15240133614",
-  "updated": "5/25/2025, 7:09:13 PM",
+  "url": "https://github.com/cstarendal/todo11/actions",
+  "updated": "5/25/2025, 7:14:45 PM",
   "commit": "a9cbeb3f66de7102f09adc857bf7ca8c7b43087e",
   "isCurrentCommit": true,
-  "timestamp": 1748193259624
+  "timestamp": 1748193285206,
+  "isMock": true
 }
