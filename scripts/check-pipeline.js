@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const https = require('https');
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -8,6 +10,9 @@ const REPO = process.env.GITHUB_REPO || 'cstarendal/todo11'; // Kan överskrivas
 const BRANCH = process.env.GITHUB_BRANCH || 'main';
 const STATUS_FILE = path.join(__dirname, '..', '.pipeline-status.json');
 const PERSONAL_ACCESS_TOKEN = process.env.GITHUB_TOKEN || '';  // GitHub Personal Access Token för privata repos
+
+// Kontrollera om JSON-output begärts
+const isJsonOutput = process.argv.includes('--json');
 
 // Stilar för output
 const STYLES = {
@@ -244,7 +249,15 @@ async function checkPipelineStatus() {
       process.exit(1);
     }
   } catch (error) {
-    console.error(`${STYLES.red}Error checking pipeline status: ${error}${STYLES.reset}`);
+    if (isJsonOutput) {
+      console.log(JSON.stringify({ 
+        error: error.message, 
+        status: 'error', 
+        success: false 
+      }));
+    } else {
+      console.error(`${STYLES.red}Error checking pipeline status: ${error}${STYLES.reset}`);
+    }
     process.exit(1);
   }
 }
