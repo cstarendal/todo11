@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Todo11 Pipeline Monitoring System is designed to provide comprehensive visibility into the CI/CD pipeline status for the project, ensuring that the team can follow the TDD cycle (Red-Green-Refactor) with confidence. This document explains how all the components work together.
+The Task11 Pipeline Monitoring System is designed to provide comprehensive visibility into the CI/CD pipeline status for the project, ensuring that the team can follow the TDD cycle (Red-Green-Refactor) with confidence. This document explains how all the components work together.
 
 ## Components
 
