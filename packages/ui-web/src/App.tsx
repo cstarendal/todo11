@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Task } from 'task11-domain'
-import { CreateTaskUseCase } from 'task11-application'
+import { CreateTaskUseCase, ToggleTaskUseCase } from 'task11-application'
 import { InMemoryTaskRepository } from 'task11-shared'
 
 // Initialize the application layer
 const taskRepository = new InMemoryTaskRepository()
 const createTaskUseCase = new CreateTaskUseCase(taskRepository)
+const toggleTaskUseCase = new ToggleTaskUseCase(taskRepository)
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -48,6 +49,19 @@ function App() {
     }
   }
 
+  const handleToggleTask = async (taskId: string) => {
+    try {
+      await toggleTaskUseCase.execute(taskId)
+      
+      // Refresh tasks list
+      const allTasks = await taskRepository.getAll()
+      setTasks(allTasks)
+    } catch (error) {
+      console.error('Failed to toggle task:', error)
+      alert('Failed to toggle task')
+    }
+  }
+
   return (
     <div className="container">
       <h1>Task11 - Task Management</h1>
@@ -76,12 +90,23 @@ function App() {
           tasks.map((task) => (
             <div key={task.id} className="task-item">
               <div>
-                <h3>{task.title}</h3>
+                <h3 style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+                  {task.title}
+                </h3>
                 {task.description && <p>{task.description}</p>}
                 <small>Created: {task.createdAt.toLocaleString()}</small>
               </div>
-              <div>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                 <span>Status: {task.completed ? 'Completed' : 'Pending'}</span>
+                <button 
+                  onClick={() => handleToggleTask(task.id)}
+                  style={{ 
+                    backgroundColor: task.completed ? '#28a745' : '#ffc107',
+                    color: task.completed ? 'white' : 'black'
+                  }}
+                >
+                  {task.completed ? 'Mark Pending' : 'Mark Complete'}
+                </button>
               </div>
             </div>
           ))
