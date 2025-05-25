@@ -4,10 +4,17 @@ interface Task {
   completed: boolean
 }
 
+// Global declarations must be in a module context
+declare global {
+  interface Window {
+    taskManager: TaskManager
+  }
+}
+
 class TaskManager {
   private tasks: Task[] = []
   private taskList!: HTMLElement
-  private taskForm!: HTMLFormElement
+  private taskForm!: HTMLFormElement  
   private taskInput!: HTMLInputElement
   private taskCounter!: HTMLElement
 
@@ -111,19 +118,15 @@ class TaskManager {
 // Global reference for event handlers
 let taskManager: TaskManager
 
-// Declare global interface for window
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  taskManager = new TaskManager()
+})
+
+// Export for event handlers
 declare global {
   interface Window {
     taskManager: TaskManager
   }
 }
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  taskManager = new TaskManager()
-  // Export for event handlers - assign after initialization
-  window.taskManager = taskManager
-})
-
-// Export the TaskManager class for testing
-export { TaskManager }
+window.taskManager = taskManager

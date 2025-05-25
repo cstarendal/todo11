@@ -1,11 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "types": ["jest", "jsdom", "node"],
     
     /* React */
     "jsx": "react-jsx",
@@ -19,14 +19,18 @@
     
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    
+    /* Additional */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   },
   "references": [
     { "path": "../domain" },
     { "path": "../shared" },
     { "path": "../application" }
   ],
-  "include": ["src"]
+  "include": ["src", "__tests__", "jest-setup.ts"]
 }

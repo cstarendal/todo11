@@ -1,28 +1,39 @@
 // Minimal task interface implementation to make tests pass
-// This is the absolute minimum needed for GREEN phase
 
-export function createMinimalTaskInterface(): void {
-  // Create the basic structure that our tests expect
-  const taskListElement = document.createElement('div');
-  taskListElement.id = 'task-list';
-  
-  const taskInputElement = document.createElement('input');
-  taskInputElement.id = 'task-input';
-  taskInputElement.type = 'text';
-  taskInputElement.placeholder = 'Enter task...';
-  
-  const addButtonElement = document.createElement('button');
-  addButtonElement.id = 'add-task-button';
-  addButtonElement.textContent = 'Add Task';
-  
-  // Find root or body and append elements
-  const root = document.getElementById('root') || document.body;
-  root.appendChild(taskInputElement);
-  root.appendChild(addButtonElement);
-  root.appendChild(taskListElement);
+/**
+ * Creates a minimal task list DOM element
+ * @returns HTMLDivElement - The created task list element
+ */
+function createTaskListElement(): HTMLDivElement {
+  const taskList = document.createElement('div');
+  taskList.id = 'task-list';
+  taskList.className = 'task-list';
+  taskList.innerHTML = '<p class="empty-message">No tasks yet. Create your first task above!</p>';
+  return taskList;
 }
 
-// Auto-initialize when loaded
-if (typeof document !== 'undefined') {
+/**
+ * Initializes the minimal task interface by adding required DOM elements
+ * Only runs in browser environment (when document is available)
+ */
+export function createMinimalTaskInterface(): void {
+  // Guard clause: only run in browser environment
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  // Avoid duplicate initialization
+  const existingTaskList = document.querySelector('#task-list');
+  if (existingTaskList) {
+    return;
+  }
+
+  // Create and append the task list element
+  const taskListElement = createTaskListElement();
+  document.body.appendChild(taskListElement);
+}
+
+// Auto-initialize when this module is loaded in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   createMinimalTaskInterface();
 }
