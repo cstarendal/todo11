@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "task11-domain": ["packages/domain/src/index.ts"],
+      "task11-application": ["packages/application/src/index.ts"],
+      "task11-shared": ["packages/shared/src/index.ts"]
+    }
+  }
+} 
