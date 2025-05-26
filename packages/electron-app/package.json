@@ -1,0 +1,39 @@
+{
+  "name": "task11-electron",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "tsc && electron .",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint -c ../../.eslintrc.js --ext .ts ./src",
+    "renderer:dev": "vite",
+    "renderer:build": "vite build",
+    "test": "jest",
+    "e2e": "npx playwright test tests/e2e/e2e-ui-visible.spec.ts"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "task11-application": "file:../application",
+    "task11-domain": "file:../domain",
+    "task11-infrastructure": "file:../infrastructure"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.5.0",
+    "ts-jest": "^29.3.4",
+    "typescript": "^5.3.3",
+    "vite": "^6.3.5",
+    "@playwright/test": "*",
+    "playwright": "*"
+  }
+}
