@@ -1,0 +1,14 @@
+{
+  "name": "task-app-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Manual testing demo for Task App",
+  "type": "module",
+  "scripts": {
+    "dev": "http-server . -p 3000 -o",
+    "build": "tsc --build ../packages/domain ../packages/shared ../packages/application"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task App - Manual Testing Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>🚀 Task App - Manual Demo</h1>
+            <p>Testing CreateTaskUseCase and ToggleTaskUseCase</p>
+        </header>
+        
+        <main>
+            <section class="task-form">
+                <h2>Create New Task</h2>
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-title">Title:</label>
+                        <input type="text" id="task-title" placeholder="Enter task title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description">Description:</label>
+                        <textarea id="task-description" placeholder="Enter task description (optional)"></textarea>
+                    </div>
+                    <button type="submit">Create Task</button>
+                </form>
+            </section>
+
+            <section class="task-list">
+                <h2>Tasks</h2>
+                <div id="task-count">Total tasks: 0</div>
+                <ul id="task-list"></ul>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
