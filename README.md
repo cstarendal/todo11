@@ -156,6 +156,21 @@ npm run build         # Bygg alla packages
 - **Performance**: <50ms file operations, <100ms encryption, <1s UI
 - **Code Style**: ESLint + Prettier enforced
 
+## 🛠️ ESLint och Prettier
+
+För att säkerställa kodkvalitet och konsekvent kodstil används ESLint och Prettier i detta projekt. Följande kommandon är tillgängliga:
+
+### ESLint
+- **Kontrollera kodkvalitet**: `npm run lint`
+- **Automatisk fix**: `npm run lint -- --fix`
+
+### Prettier
+- **Kontrollera kodformatering**: `npm run format -- --check`
+- **Formatera kod**: `npm run format`
+
+### CI/CD Integration
+Både ESLint och Prettier körs automatiskt i CI/CD-pipelinen för att säkerställa att kodkvalitet och formatering följs.
+
 ---
 
 *Byggt med ❤️ enligt hexagonal architecture och TDD principles*

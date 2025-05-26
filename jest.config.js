@@ -37,13 +37,18 @@ module.exports = {
     {
       displayName: 'ui-web',
       preset: 'ts-jest',
-      testMatch: ['<rootDir>/packages/ui-web/**/*.test.ts'],
+      testMatch: ['<rootDir>/packages/ui-web/**/*.test.ts?(x)'],
       testEnvironment: 'jsdom',
       setupFilesAfterEnv: ['<rootDir>/packages/ui-web/jest-setup.ts'],
       transform: {
-        '^.+\\.ts$': 'ts-jest',
+        '^.+\\.tsx?$': 'ts-jest',
       },
-      moduleFileExtensions: ['ts', 'js'],
+      moduleFileExtensions: ['ts', 'tsx', 'js'],
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/packages/ui-web/tsconfig.json'
+        }
+      },
     },
   ],
   collectCoverageFrom: [
@@ -61,6 +66,8 @@ module.exports = {
     '/packages/.*/backup/',
     '.*/backup/.*',
     'packages/ui-web/backup',
+    '/helpers/',
+    '.*helpers.*',
   ],
   coverageThreshold: {
     global: {
