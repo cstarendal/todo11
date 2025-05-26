@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { Task } from '../../domain/src/entities/Task';
+import { Task } from 'task11-domain';
 import { InMemoryTaskRepository } from '../src/interfaces/ITaskRepository';
 
 describe('InMemoryTaskRepository', () => {

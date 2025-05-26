@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { Task } from '../../domain/src/entities/Task';
-import { ITaskRepository } from '../../shared/src/interfaces/ITaskRepository';
+import { Task } from 'task11-domain';
+import { ITaskRepository } from 'task11-shared';
 
 interface FileSystemError extends Error {
   code?: string;
@@ -10,16 +10,22 @@ interface FileSystemError extends Error {
 export class FileTaskRepository implements ITaskRepository {
   private readonly dataDir: string;
   private readonly tasksFile: string;
+  private readonly lockFile: string;
+  private readonly maxRetries = 3;
+  private readonly retryDelay = 50; // ms
 
   constructor(dataDir: string) {
     this.dataDir = dataDir;
     this.tasksFile = path.join(dataDir, 'tasks.json');
+    this.lockFile = path.join(dataDir, 'tasks.json.lock');
   }
 
   async add(task: Task): Promise<void> {
-    const tasks = await this.loadTasks();
-    tasks.push(task);
-    await this.saveTasks(tasks);
+    await this.withLock(async () => {
+      const tasks = await this.loadTasks();
+      tasks.push(task);
+      await this.saveTasks(tasks);
+    });
   }
 
   async getAll(): Promise<Task[]> {
@@ -33,13 +39,58 @@ export class FileTaskRepository implements ITaskRepository {
   }
 
   async update(task: Task): Promise<void> {
-    const tasks = await this.loadTasks();
-    const index = tasks.findIndex(t => t.id === task.id);
-    if (index === -1) {
-      throw new Error(`Task with id ${task.id} not found`);
+    await this.withLock(async () => {
+      const tasks = await this.loadTasks();
+      const index = tasks.findIndex(t => t.id === task.id);
+      if (index === -1) {
+        throw new Error(`Task with id ${task.id} not found`);
+      }
+      tasks[index] = task;
+      await this.saveTasks(tasks);
+    });
+  }
+
+  private async withLock<T>(operation: () => Promise<T>): Promise<T> {
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+      try {
+        await this.acquireLock();
+        try {
+          return await operation();
+        } finally {
+          await this.releaseLock();
+        }
+      } catch (error) {
+        if (attempt === this.maxRetries - 1) {
+          throw error;
+        }
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, this.retryDelay * (attempt + 1)));
+      }
     }
-    tasks[index] = task;
-    await this.saveTasks(tasks);
+    throw new Error('Failed to acquire lock after maximum retries');
+  }
+
+  private async acquireLock(): Promise<void> {
+    try {
+      // Ensure directory exists
+      await fs.mkdir(this.dataDir, { recursive: true });
+      
+      // Try to create lock file (exclusive operation)
+      await fs.writeFile(this.lockFile, process.pid.toString(), { flag: 'wx' });
+    } catch (error) {
+      if ((error as FileSystemError).code === 'EEXIST') {
+        throw new Error('Lock file already exists');
+      }
+      throw error;
+    }
+  }
+
+  private async releaseLock(): Promise<void> {
+    try {
+      await fs.unlink(this.lockFile);
+    } catch (error) {
+      // Ignore errors when releasing lock (file might not exist)
+    }
   }
 
   private async loadTasks(): Promise<Task[]> {

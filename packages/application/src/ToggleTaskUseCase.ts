@@ -1,5 +1,5 @@
-import { Task } from '../../domain/src/entities/Task';
-import { ITaskRepository } from '../../shared/src/interfaces/ITaskRepository';
+import { Task } from 'task11-domain';
+import { ITaskRepository } from 'task11-shared';
 
 export class ToggleTaskUseCase {
   constructor(private readonly repo: ITaskRepository) {}

@@ -1,4 +1,4 @@
-import { Task } from '../../../domain/src/entities/Task';
+import { Task } from 'task11-domain';
 export interface ITaskRepository {
     add(task: Task): Promise<void>;
     getAll(): Promise<Task[]>;

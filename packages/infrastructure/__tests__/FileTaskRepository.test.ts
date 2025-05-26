@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { Task } from '../../domain/src/entities/Task';
+import { Task } from 'task11-domain';
 import { FileTaskRepository } from '../src/FileTaskRepository';
 
 describe('FileTaskRepository', () => {
