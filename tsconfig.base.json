@@ -11,8 +11,7 @@
     "paths": {
       "task11-domain": ["packages/domain/src/index.ts"],
       "task11-application": ["packages/application/src/index.ts"],
-      "task11-shared": ["packages/shared/src/index.ts"],
-      "task11-platform-web": ["packages/platform-web/src/index.ts"]
+      "task11-shared": ["packages/shared/src/index.ts"]
     }
   }
 } 
