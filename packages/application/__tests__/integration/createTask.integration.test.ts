@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { InMemoryTaskRepository } from 'task11-shared';
+import { InMemoryTaskRepository } from '../../../shared/src';
 import { CreateTaskUseCase } from '../../src/CreateTaskUseCase';
 
 describe('Integration: Create Task', () => {

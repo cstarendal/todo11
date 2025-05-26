@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect, beforeAll, jest } from '@jest/globals';
+import { describe, it, expect, jest } from '@jest/globals';
 
 declare const window: any;
-// Mock window.require and ipcRenderer for Jest before importing App
 window.require = () => ({
   ipcRenderer: {
-    invoke: jest.fn().mockResolvedValue([]),
-  },
+    // @ts-ignore
+    invoke: jest.fn().mockResolvedValue([] as any),
+  } as any,
 });
 import { App } from './renderer';
 

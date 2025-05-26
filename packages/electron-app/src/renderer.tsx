@@ -1,5 +1,5 @@
 import './index.css';
-import React from 'react';
+import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Task } from 'task11-domain';
 // Dynamically require Electron's ipcRenderer at runtime to avoid bundling the entire electron package.
@@ -9,6 +9,8 @@ const { ipcRenderer } = (window as any).require
   ? (window as any).require('electron')
   : require('electron');
 
+import SettingsModal from './SettingsModal';
+
 const SIDEBAR_LISTS = [
   { name: 'Today', icon: '📅', count: 0 },
   { name: 'Next 7 Days', icon: '🗓️', count: 0 },
@@ -17,23 +19,38 @@ const SIDEBAR_LISTS = [
   { name: 'Hälsa & Rutiner', icon: '💪', count: 0 },
   { name: 'WeekRetroList', icon: '🔄', count: 0 },
   { name: 'Hemfix', icon: '🏠', count: 0 },
-  { name: 'Starendal Ventures', icon: '🚀', count: 0 },
+  { name: 'Starendal Ventures', icon: '��', count: 0 },
 ];
 
-export const App: React.FC = () => {
+export function App(): React.ReactElement {
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const [selectedList, setSelectedList] = React.useState('Today');
   const [selectedTask, setSelectedTask] = React.useState<Task | null>(null);
   const [newTaskTitle, setNewTaskTitle] = React.useState('');
   const [newTaskDescription, setNewTaskDescription] = React.useState('');
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [storagePath, setStoragePath] = React.useState<string>('');
 
   React.useEffect(() => {
     loadTasks();
+    loadStoragePath();
   }, []);
 
   const loadTasks = async () => {
     const loadedTasks = await ipcRenderer.invoke('get-tasks');
     setTasks(Array.isArray(loadedTasks) ? loadedTasks : []);
+  };
+
+  const loadStoragePath = async () => {
+    const path = await ipcRenderer.invoke('get-storage-path');
+    setStoragePath(typeof path === 'string' ? path : '');
+  };
+
+  const handleChooseFolder = async () => {
+    const newPath = await ipcRenderer.invoke('pick-storage-folder');
+    if (typeof newPath === 'string') {
+      setStoragePath(newPath);
+    }
   };
 
   const handleCreateTask = async (e: React.FormEvent) => {
@@ -60,7 +77,17 @@ export const App: React.FC = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r flex flex-col">
-        <div className="p-4 text-2xl font-bold border-b">TODO</div>
+        <div className="p-4 text-2xl font-bold border-b flex items-center justify-between">
+          TODO
+          <button
+            data-testid="open-settings"
+            className="ml-2 p-1 rounded hover:bg-gray-200"
+            onClick={() => setSettingsOpen(true)}
+            title="Settings"
+          >
+            <span role="img" aria-label="settings">⚙️</span>
+          </button>
+        </div>
         <nav className="flex-1 overflow-y-auto">
           {SIDEBAR_LISTS.map(list => (
             <div
@@ -159,9 +186,16 @@ export const App: React.FC = () => {
           )}
         </div>
       </aside>
+
+      <SettingsModal
+        open={settingsOpen}
+        storagePath={storagePath}
+        onChooseFolder={handleChooseFolder}
+        onClose={() => setSettingsOpen(false)}
+      />
     </div>
   );
-};
+}
 
 const container = document.getElementById('root');
 if (container) {

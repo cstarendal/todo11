@@ -53,7 +53,10 @@ export class NodeFileWatcher implements IFileWatcher {
       // Watch the directory containing the file to detect creation/deletion
       const dir = path.dirname(filePath);
       const filename = path.basename(filePath);
-      
+
+      // Ensure directory exists
+      await fs.promises.mkdir(dir, { recursive: true });
+
       // Check if file exists initially
       let fileExists = false;
       try {
@@ -63,11 +66,29 @@ export class NodeFileWatcher implements IFileWatcher {
         // File doesn't exist yet
       }
 
-      const watcher = fs.watch(dir, (eventType, changedFilename) => {
-        if (changedFilename === filename) {
-          this.handleFileChange(filePath, fileExists, callback);
+      const maxRetries = 5;
+      const delay = 50;
+      let watcher: fs.FSWatcher | null = null;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          watcher = fs.watch(dir, (eventType, changedFilename) => {
+            if (changedFilename === filename) {
+              this.handleFileChange(filePath, fileExists, callback);
+            }
+          });
+          break; // success
+        } catch (err: any) {
+          if (err.code !== 'ENOENT' || attempt === maxRetries - 1) {
+            throw err;
+          }
+          // Wait and retry
+          await new Promise(res => setTimeout(res, delay));
         }
-      });
+      }
+
+      if (!watcher) {
+        throw new Error(`Failed to establish watcher for ${dir}`);
+      }
 
       this.watchers.set(filePath, watcher);
 

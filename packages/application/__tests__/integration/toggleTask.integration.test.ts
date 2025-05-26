@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { Task } from 'task11-domain';
 import { ToggleTaskUseCase } from '../../src/ToggleTaskUseCase';
-import { InMemoryTaskRepository } from 'task11-shared';
+import { InMemoryTaskRepository } from '../../../shared/src';
 
 describe('ToggleTaskUseCase Integration Test', () => {
   let repository: InMemoryTaskRepository;

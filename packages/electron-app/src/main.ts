@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import { FileSyncManager } from 'task11-infrastructure';
 import { FileSyncConfigManager } from 'task11-infrastructure';
@@ -26,8 +26,9 @@ function createWindow() {
 
 // Persistent file-based task storage
 const config = FileSyncConfigManager.getDefaultConfig();
-const syncManager = new FileSyncManager(config.storageDir);
+let syncManager = new FileSyncManager(config.storageDir);
 let repo: ReturnType<FileSyncManager['getRepository']>;
+let currentStoragePath = config.storageDir;
 
 app.whenReady().then(async () => {
   await syncManager.start();
@@ -80,4 +81,38 @@ ipcMain.handle('toggle-task', async (_, taskId: string) => {
     return updatedTask;
   }
   return null;
+});
+
+// IPC handler to pick a storage folder
+ipcMain.handle('pick-storage-folder', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    title: 'Select Storage Folder',
+  });
+  if (!result.canceled && result.filePaths.length > 0) {
+    currentStoragePath = result.filePaths[0];
+    // Stop old syncManager if needed (not strictly necessary if no background process)
+    // Create new syncManager and repo for the new path
+    // (In a real app, you may want to debounce or queue this)
+    // @ts-ignore
+    if (syncManager && syncManager.stop) await syncManager.stop();
+    // @ts-ignore
+    syncManager = new FileSyncManager(currentStoragePath);
+    await syncManager.start();
+    repo = syncManager.getRepository();
+    return currentStoragePath;
+  }
+  return currentStoragePath;
+});
+
+// IPC handler to get current storage path
+ipcMain.handle('get-storage-path', async () => {
+  return currentStoragePath;
+});
+
+// IPC handler to set storage path (for future use)
+ipcMain.handle('set-storage-path', async (_, newPath: string) => {
+  currentStoragePath = newPath;
+  // Optionally: update syncManager/repo here
+  return currentStoragePath;
 });

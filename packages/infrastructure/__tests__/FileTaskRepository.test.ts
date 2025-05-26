@@ -147,4 +147,62 @@ describe('FileTaskRepository', () => {
     mockedFs.unlink.mockRejectedValueOnce(new Error('fail'));
     await expect(repository['releaseLock']()).resolves.toBeUndefined();
   });
+
+  it('should retry withLock if acquireLock fails first, then succeeds', async () => {
+    // Första anropet kastar EEXIST, andra lyckas
+    mockedFs.writeFile
+      .mockRejectedValueOnce(Object.assign(new Error('exists'), { code: 'EEXIST' }))
+      .mockResolvedValueOnce(undefined);
+
+    // Mocka saveTasks så vi kan verifiera att operationen körs
+    const saveTasksSpy = jest.spyOn(repository as any, 'saveTasks').mockResolvedValue(undefined);
+
+    const task = new Task('Retry Test', 'retry-1');
+    await repository.add(task);
+
+    expect(saveTasksSpy).toHaveBeenCalled();
+    saveTasksSpy.mockRestore();
+  });
+
+  it('should re-throw unknown errors from loadTasks', async () => {
+    const customError = Object.assign(new Error('custom error'), { code: 'EACCES' });
+    mockedFs.readFile.mockRejectedValueOnce(customError);
+    await expect(repository['loadTasks']()).rejects.toThrow('custom error');
+  });
+
+  it('should re-throw errors from saveTasks if mkdir fails', async () => {
+    const mkdirError = new Error('mkdir fail');
+    mockedFs.mkdir.mockRejectedValueOnce(mkdirError);
+    const task = new Task('Save Error', 'save-err');
+    await expect(repository['saveTasks']([task])).rejects.toThrow('mkdir fail');
+  });
+
+  it('should re-throw errors from saveTasks if writeFile fails', async () => {
+    mockedFs.mkdir.mockResolvedValueOnce(undefined);
+    mockedFs.writeFile.mockRejectedValueOnce(new Error('write fail'));
+    const task = new Task('Write Error', 'write-err');
+    await expect(repository['saveTasks']([task])).rejects.toThrow('write fail');
+  });
+
+  it('should re-throw errors from acquireLock if writeFile fails (not EEXIST)', async () => {
+    mockedFs.mkdir.mockResolvedValueOnce(undefined);
+    mockedFs.writeFile.mockRejectedValueOnce(new Error('other write fail'));
+    await expect(repository['acquireLock']()).rejects.toThrow('other write fail');
+  });
+
+  it('should throw if a task in file is null or not an object', async () => {
+    mockedFs.readFile.mockResolvedValueOnce(JSON.stringify([null, 42, 'string']));
+    await expect(repository.getAll()).rejects.toThrow('Invalid task data at index 0');
+  });
+
+  it('should throw with correct index if a task in file is missing required fields at different positions', async () => {
+    // Första task är OK, andra saknar title, tredje saknar id
+    const tasks = [
+      { id: '1', title: 'ok' },
+      { id: '2' },
+      { title: 'no id' }
+    ];
+    mockedFs.readFile.mockResolvedValueOnce(JSON.stringify(tasks));
+    await expect(repository.getAll()).rejects.toThrow('missing required fields');
+  });
 });

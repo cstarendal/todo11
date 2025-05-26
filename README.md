@@ -1,13 +1,5 @@
 # Task App - Hexagonal Architecture with File-Sync
 
-## 🚨 PRIME DIRECTIVE - UTVECKLINGSREGLER
-
-**⚠️ KRITISK REGEL: AI-AGENTEN FÅR ALDRIG SKAPA KOD UTAN EXPLICIT TILLSTÅND**
-
-- **INGEN kod får skapas, modifieras eller genereras utan uttryckligt medgivande**
-- **ALLTID fråga om tillstånd innan du skriver, redigerar eller skapar kod**
-- **VÄNTA på klart "ja" eller "skapa kod för..." innan du fortsätter**
-- **Vid tvivel - FRÅGA först, koda sedan**
 
 ---
 

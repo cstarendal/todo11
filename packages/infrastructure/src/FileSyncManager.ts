@@ -1,7 +1,9 @@
 import { FileTaskRepository } from './FileTaskRepository';
-import { IFileWatcher, NodeFileWatcher, FileEvent } from './FileWatcher';
+import { IFileWatcher, FileEvent } from './FileWatcher';
+import { ChokidarFileWatcher } from './ChokidarFileWatcher';
 import { Task } from 'task11-domain';
 import * as path from 'path';
+import * as fs from 'fs/promises';
 
 export interface IFileSyncManager {
   start(): Promise<void>;
@@ -19,13 +21,23 @@ export class FileSyncManager implements IFileSyncManager {
 
   constructor(dataDir: string, watcher?: IFileWatcher) {
     this.repository = new FileTaskRepository(dataDir);
-    this.watcher = watcher || new NodeFileWatcher();
+    this.watcher = watcher || new ChokidarFileWatcher();
     this.tasksFile = path.join(dataDir, 'tasks.json');
   }
 
   async start(): Promise<void> {
     if (this.isWatching) {
       return;
+    }
+
+    // Ensure the storage directory exists before watching
+    await fs.mkdir(path.dirname(this.tasksFile), { recursive: true });
+
+    // Ensure the tasks file exists (touch if missing)
+    try {
+      await fs.access(this.tasksFile);
+    } catch {
+      await fs.writeFile(this.tasksFile, '[]', 'utf-8');
     }
 
     // Start watching the tasks file for changes
