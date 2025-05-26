@@ -1,1 +1,2 @@
-// Initial setup - reserved for infrastructure adapters
+// Infrastructure adapters for file storage and persistence
+export { FileTaskRepository } from './FileTaskRepository';

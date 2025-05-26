@@ -8,9 +8,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@todo-app/domain": "0.1.0",
-    "@todo-app/application": "0.1.0",
-    "@todo-app/shared": "0.1.0"
+    "@task-app/domain": "0.1.0",
+    "@task-app/application": "0.1.0",
+    "@task-app/shared": "0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

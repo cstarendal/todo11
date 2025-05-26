@@ -34,6 +34,16 @@ module.exports = {
       },
       moduleFileExtensions: ['ts', 'js'],
     },
+    {
+      displayName: 'infrastructure',
+      preset: 'ts-jest',
+      testMatch: ['<rootDir>/packages/infrastructure/**/*.test.ts'],
+      testEnvironment: 'node',
+      transform: {
+        '^.+\\.ts$': 'ts-jest',
+      },
+      moduleFileExtensions: ['ts', 'js'],
+    },
   ],
   collectCoverageFrom: [
     'packages/*/src/**/*.ts',
