@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build": "tsc --build packages/domain packages/shared packages/application packages/infrastructure",
+    "build": "tsc --build packages/domain packages/shared packages/application packages/infrastructure packages/platform-web",
     "lint": "eslint packages/*/src/**/*.ts",
     "format": "prettier --write packages/*/src/**/*.ts"
   },

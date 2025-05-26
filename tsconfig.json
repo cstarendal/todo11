@@ -29,7 +29,8 @@
     { "path": "./packages/domain" },
     { "path": "./packages/application" },
     { "path": "./packages/infrastructure" },
-    { "path": "./packages/shared" }
+    { "path": "./packages/shared" },
+    { "path": "./packages/platform-web" }
   ],
   "exclude": [
     "coverage/**",

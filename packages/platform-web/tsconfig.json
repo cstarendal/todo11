@@ -1,16 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "lib": ["DOM", "ES2022"],
     "outDir": "./dist",
-    "allowJs": true,
-    "noEmit": true
+    "rootDir": "./src",
+    "composite": true
   },
   "include": ["src/**/*"],
   "references": [
-    { "path": "../application" },
-    { "path": "../shared" },
     { "path": "../domain" }
   ]
-}
+} 
