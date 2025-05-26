@@ -14,7 +14,13 @@
     "sourceMap": true,
     "composite": true,
     "incremental": true,
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "task11-domain": ["packages/domain/src/index.ts"],
+      "task11-application": ["packages/application/src/index.ts"],
+      "task11-shared": ["packages/shared/src/index.ts"]
+    }
   },
   "include": [
     "packages/**/*"
