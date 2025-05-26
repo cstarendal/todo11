@@ -31,7 +31,7 @@ export class Task {
     if (!title || title.trim().length === 0) {
       throw new Error('Task title cannot be empty');
     }
-    
+
     this.id = id || uuidv4();
     this.title = title.trim();
     this.description = description || '';
@@ -56,11 +56,11 @@ export class Task {
   toggle(): Task {
     return this.clone({ completed: !this.completed });
   }
-  
+
   setDueDate(dueDate: Date): Task {
     return this.clone({ dueDate });
   }
-  
+
   clearDueDate(): Task {
     return this.clone({ dueDate: undefined });
   }
