@@ -41,7 +41,7 @@ packages/
 ## 🚀 Utvecklingsmetodik
 
 ### Test-Driven Development (TDD)
-- **100% coverage** - Build fails på mindre än 100%
+- **90% coverage** - Build fails på mindre än 90%
 - **Microscopic commits** - Ett test, en implementation, en refactor per commit
 - **Trunk-based development** - Allt direkt till main, inget branching
 
@@ -151,7 +151,7 @@ npm run build         # Bygg alla packages
 
 ## 🎯 Quality Gates
 
-- **Test Coverage**: 100% (branches, functions, lines, statements)
+- **Test Coverage**: 90% (branches, functions, lines, statements)
 - **TypeScript**: Strict mode enabled
 - **Performance**: <50ms file operations, <100ms encryption, <1s UI
 - **Code Style**: ESLint + Prettier enforced

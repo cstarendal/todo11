@@ -1,27 +1,55 @@
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+jest.mock('fs/promises');
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Task } from 'task11-domain';
 import { FileTaskRepository } from '../src/FileTaskRepository';
 
+const mockedFs = fs as jest.Mocked<typeof fs>;
+
 describe('FileTaskRepository', () => {
   let repository: FileTaskRepository;
   let testDir: string;
+  let fileStore: Map<string, string>;
 
   beforeEach(async () => {
-    // Create a temporary directory for each test
+    jest.clearAllMocks();
+    fileStore = new Map<string, string>();
     testDir = path.join(__dirname, 'temp-test-data', `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
-    await fs.mkdir(testDir, { recursive: true });
+
+    // Mock mkdir/rm/unlink to resolve immediately
+    mockedFs.mkdir.mockResolvedValue(undefined);
+    mockedFs.rm.mockResolvedValue(undefined);
+    mockedFs.unlink.mockResolvedValue(undefined);
+
+    // Mock writeFile to save data to in-memory store
+    (mockedFs.writeFile as any).mockImplementation(async (file: any, data: any) => {
+      fileStore.set(file.toString(), typeof data === 'string' ? data : data.toString());
+      return undefined;
+    });
+
+    // Mock readFile to read from in-memory store or throw ENOENT if not found
+    (mockedFs.readFile as any).mockImplementation(async (file: any, encoding: any) => {
+      const content = fileStore.get(file.toString());
+      if (content !== undefined) {
+        return encoding === 'utf-8' ? content : Buffer.from(content);
+      }
+      const err = Object.assign(new Error('not found'), { code: 'ENOENT' });
+      throw err;
+    });
+
+    // Mock access to succeed if file exists, else fail
+    (mockedFs.access as any)?.mockImplementation(async (file: any) => {
+      if (fileStore.has(file.toString())) return undefined;
+      const err = Object.assign(new Error('not found'), { code: 'ENOENT' });
+      throw err;
+    });
+
     repository = new FileTaskRepository(testDir);
   });
 
   afterEach(async () => {
-    // Clean up test directory
-    try {
-      await fs.rm(testDir, { recursive: true, force: true });
-    } catch (error) {
-      // Ignore cleanup errors
-    }
+    jest.clearAllMocks();
   });
 
   it('should implement ITaskRepository interface', () => {
@@ -81,5 +109,42 @@ describe('FileTaskRepository', () => {
     await repository.getAll();
     const getAllTime = performance.now() - getAllStart;
     expect(getAllTime).toBeLessThan(50);
+  });
+
+  it('should throw if lock file already exists (EEXIST)', async () => {
+    mockedFs.writeFile.mockRejectedValueOnce(Object.assign(new Error('exists'), { code: 'EEXIST' }));
+    await expect(repository['acquireLock']()).rejects.toThrow('Lock file already exists');
+  });
+
+  it('should throw if update is called on non-existent task', async () => {
+    mockedFs.readFile.mockResolvedValueOnce('[]');
+    const task = new Task('Not found', 'no-id');
+    await expect(repository.update(task)).rejects.toThrow('Task with id no-id not found');
+  });
+
+  it('should return empty array if tasks file does not exist (ENOENT)', async () => {
+    mockedFs.readFile.mockRejectedValueOnce(Object.assign(new Error('not found'), { code: 'ENOENT' }));
+    const tasks = await repository['loadTasks']();
+    expect(tasks).toEqual([]);
+  });
+
+  it('should throw if tasks file is invalid JSON', async () => {
+    mockedFs.readFile.mockResolvedValueOnce('not-json');
+    await expect(repository.getAll()).rejects.toThrow();
+  });
+
+  it('should throw if tasks file is not an array', async () => {
+    mockedFs.readFile.mockResolvedValueOnce(JSON.stringify({ not: 'an array' }));
+    await expect(repository.getAll()).rejects.toThrow('Invalid tasks file format');
+  });
+
+  it('should throw if a task in file is missing required fields', async () => {
+    mockedFs.readFile.mockResolvedValueOnce(JSON.stringify([{ id: '1' }]));
+    await expect(repository.getAll()).rejects.toThrow('missing required fields');
+  });
+
+  it('should ignore errors when releasing lock', async () => {
+    mockedFs.unlink.mockRejectedValueOnce(new Error('fail'));
+    await expect(repository['releaseLock']()).resolves.toBeUndefined();
   });
 });

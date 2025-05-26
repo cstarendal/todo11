@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import * as fs from 'fs/promises';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import * as fs from 'fs';
 import * as path from 'path';
 import { IFileWatcher, FileEvent, NodeFileWatcher } from '../src/index';
 
@@ -11,7 +11,7 @@ describe('FileWatcher', () => {
   beforeEach(async () => {
     // Create a temporary directory for each test
     testDir = path.join(__dirname, 'temp-watch-data', `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
-    await fs.mkdir(testDir, { recursive: true });
+    await fs.promises.mkdir(testDir, { recursive: true });
     testFile = path.join(testDir, 'test.json');
     watcher = new NodeFileWatcher();
   });
@@ -20,7 +20,7 @@ describe('FileWatcher', () => {
     // Stop watching and clean up
     try {
       await watcher.unwatch(testFile);
-      await fs.rm(testDir, { recursive: true, force: true });
+      await fs.promises.rm(testDir, { recursive: true, force: true });
     } catch (error) {
       // Ignore cleanup errors
     }
@@ -46,7 +46,7 @@ describe('FileWatcher', () => {
 
     // Create the file after a small delay to ensure watcher is set up
     setTimeout(async () => {
-      await fs.writeFile(testFile, JSON.stringify({ test: 'data' }));
+      await fs.promises.writeFile(testFile, JSON.stringify({ test: 'data' }));
     }, 100);
     
     // Wait for event
@@ -60,7 +60,7 @@ describe('FileWatcher', () => {
 
   it('should detect file modification events', async () => {
     // Create file first
-    await fs.writeFile(testFile, JSON.stringify({ initial: 'data' }));
+    await fs.promises.writeFile(testFile, JSON.stringify({ initial: 'data' }));
     
     const events: FileEvent[] = [];
     const eventPromise = new Promise<void>((resolve) => {
@@ -75,7 +75,7 @@ describe('FileWatcher', () => {
 
     // Modify the file after a small delay
     setTimeout(async () => {
-      await fs.writeFile(testFile, JSON.stringify({ modified: 'data' }));
+      await fs.promises.writeFile(testFile, JSON.stringify({ modified: 'data' }));
     }, 100);
 
     // Wait for event
@@ -88,7 +88,7 @@ describe('FileWatcher', () => {
 
   it('should detect file deletion events', async () => {
     // Create file first
-    await fs.writeFile(testFile, JSON.stringify({ test: 'data' }));
+    await fs.promises.writeFile(testFile, JSON.stringify({ test: 'data' }));
     
     const events: FileEvent[] = [];
     const eventPromise = new Promise<void>((resolve) => {
@@ -103,7 +103,7 @@ describe('FileWatcher', () => {
 
     // Delete the file after a small delay
     setTimeout(async () => {
-      await fs.unlink(testFile);
+      await fs.promises.unlink(testFile);
     }, 100);
 
     // Wait for event
@@ -127,12 +127,50 @@ describe('FileWatcher', () => {
     await watcher.unwatch(testFile);
     
     // Create a file after unwatching
-    await fs.writeFile(testFile, JSON.stringify({ test: 'data' }));
+    await fs.promises.writeFile(testFile, JSON.stringify({ test: 'data' }));
     
     // Wait a bit to see if any events are triggered
     await new Promise(resolve => setTimeout(resolve, 300));
 
     // No events should be detected after unwatching
     expect(events).toHaveLength(0);
+  }, 10000);
+
+  it('should not trigger an event if file does not exist and is not created', async () => {
+    const events: FileEvent[] = [];
+    const callback = (event: FileEvent) => {
+      events.push(event);
+    };
+    await watcher.watch(testFile, callback);
+    // Simulate a change in the directory without creating the file
+    const dir = path.dirname(testFile);
+    fs.watchFile(dir, () => {
+      // Do nothing, file is not created
+    });
+    // Wait a bit to see if any events are triggered
+    await new Promise(resolve => setTimeout(resolve, 300));
+    expect(events).toHaveLength(0);
+    fs.unwatchFile(dir);
+  }, 10000);
+
+  it('should handle fs.promises.access throwing an error', async () => {
+    const events: FileEvent[] = [];
+    const callback = (event: FileEvent) => {
+      events.push(event);
+    };
+    // Mock fs.promises.access to throw an error
+    const accessSpy = jest.spyOn(fs.promises, 'access').mockRejectedValue(new Error('Access error'));
+    await watcher.watch(testFile, callback);
+    // Simulate a change in the directory
+    const dir = path.dirname(testFile);
+    fs.watchFile(dir, () => {
+      // Trigger a change
+    });
+    // Wait a bit to see if any events are triggered
+    await new Promise(resolve => setTimeout(resolve, 300));
+    expect(events).toHaveLength(0);
+    fs.unwatchFile(dir);
+    // Restore original fs.promises.access
+    accessSpy.mockRestore();
   }, 10000);
 });

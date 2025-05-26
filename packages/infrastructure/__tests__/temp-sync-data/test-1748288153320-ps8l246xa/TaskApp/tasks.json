@@ -1,0 +1,8 @@
+[
+  {
+    "id": "external-1",
+    "title": "External task",
+    "description": "Added by another device",
+    "completed": false
+  }
+]
