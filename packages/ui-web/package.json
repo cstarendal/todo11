@@ -16,6 +16,7 @@
     "task11-application": "file:../application",
     "task11-domain": "file:../domain",
     "task11-shared": "file:../shared",
+    "task11-platform-web": "file:../platform-web",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

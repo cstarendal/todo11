@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser File-Sync Demo - Task11</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: #e5e7eb;
+        }
+
+        .demo-panel {
+            background: white;
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+
+        .sync-status {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sync-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .task-form {
+            margin-bottom: 20px;
+        }
+
+        .task-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .task-form button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .task-form button:hover {
+            background: #1d4ed8;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .task-item:hover {
+            background: #f3f4f6;
+        }
+
+        .task-item.completed {
+            background: #ecfdf5;
+            border-color: #10b981;
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .task-text {
+            flex: 1;
+            transition: all 0.2s;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+
+        .sync-log {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            height: 200px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+        }
+
+        .log-entry.sync {
+            color: #60a5fa;
+        }
+
+        .log-entry.create {
+            color: #34d399;
+        }
+
+        .log-entry.toggle {
+            color: #fbbf24;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: #374151;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .control-btn:hover {
+            background: #4b5563;
+        }
+
+        .device-label {
+            background: #6366f1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Browser File-Sync Demo</h1>
+            <p>Multi-tab synchronization using localStorage events</p>
+        </div>
+
+        <div class="demo-grid">
+            <!-- Device 1 Panel -->
+            <div class="demo-panel">
+                <div class="device-label">💻 Device 1 (Current Tab)</div>
+                <div class="panel-title">Task Management</div>
+                
+                <div class="sync-status">
+                    <div class="sync-indicator"></div>
+                    <span>Real-time sync active</span>
+                </div>
+
+                <form class="task-form" id="task-form-1">
+                    <input type="text" id="task-title-1" placeholder="Enter task title..." required>
+                    <input type="text" id="task-description-1" placeholder="Description (optional)">
+                    <button type="submit">Add Task</button>
+                </form>
+
+                <ul class="task-list" id="task-list-1">
+                    <li class="empty-state">No tasks yet. Create your first task above!</li>
+                </ul>
+            </div>
+
+            <!-- Device 2 Panel -->
+            <div class="demo-panel">
+                <div class="device-label">📱 Device 2 (Simulated)</div>
+                <div class="panel-title">Synchronized View</div>
+                
+                <div class="sync-status">
+                    <div class="sync-indicator"></div>
+                    <span>Receiving sync updates</span>
+                </div>
+
+                <form class="task-form" id="task-form-2">
+                    <input type="text" id="task-title-2" placeholder="Enter task title..." required>
+                    <input type="text" id="task-description-2" placeholder="Description (optional)">
+                    <button type="submit">Add Task</button>
+                </form>
+
+                <ul class="task-list" id="task-list-2">
+                    <li class="empty-state">No tasks yet. Create your first task above!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sync Log -->
+        <div class="demo-panel">
+            <div class="panel-title">🔍 Sync Activity Log</div>
+            <div class="sync-log" id="sync-log"></div>
+            <div class="controls">
+                <button class="control-btn" onclick="clearLog()">Clear Log</button>
+                <button class="control-btn" onclick="simulateExternalChange()">Simulate External Change</button>
+                <button class="control-btn" onclick="openNewTab()">Open New Tab</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Browser-compatible Task entity (mirrors domain/Task.ts)
+        class Task {
+            constructor(title, id = null, description = '', completed = false) {
+                this.id = id || this.generateId();
+                this.title = title;
+                this.description = description;
+                this.completed = completed;
+                this.createdAt = new Date().toISOString();
+                this.updatedAt = new Date().toISOString();
+            }
+
+            generateId() {
+                return 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            toggle() {
+                return new Task(this.title, this.id, this.description, !this.completed);
+            }
+
+            static fromJSON(json) {
+                const data = typeof json === 'string' ? JSON.parse(json) : json;
+                return new Task(data.title, data.id, data.description, data.completed);
+            }
+        }
+
+        // Browser storage repository (simulates file-sync)
+        class BrowserSyncRepository {
+            constructor(deviceId) {
+                this.deviceId = deviceId;
+                this.storageKey = 'task11_sync_data';
+                this.lastSyncKey = 'task11_last_sync';
+                
+                // Listen for storage changes from other tabs/windows
+                window.addEventListener('storage', (e) => {
+                    if (e.key === this.storageKey) {
+                        this.handleExternalSync();
+                    }
+                });
+            }
+
+            async getAll() {
+                const data = localStorage.getItem(this.storageKey);
+                if (!data) return [];
+                
+                try {
+                    const parsed = JSON.parse(data);
+                    return parsed.tasks.map(t => Task.fromJSON(t));
+                } catch (error) {
+                    console.error('Error parsing tasks:', error);
+                    return [];
+                }
+            }
+
+            async save(tasks) {
+                const syncData = {
+                    tasks: tasks,
+                    lastSync: new Date().toISOString(),
+                    syncedBy: this.deviceId
+                };
+                
+                localStorage.setItem(this.storageKey, JSON.stringify(syncData));
+                localStorage.setItem(this.lastSyncKey, syncData.lastSync);
+                
+                this.logSync(`💾 Data saved by ${this.deviceId}`);
+            }
+
+            async add(task) {
+                const tasks = await this.getAll();
+                tasks.push(task);
+                await this.save(tasks);
+                this.logSync(`➕ Task created: "${task.title}" by ${this.deviceId}`, 'create');
+            }
+
+            async update(task) {
+                const tasks = await this.getAll();
+                const index = tasks.findIndex(t => t.id === task.id);
+                if (index >= 0) {
+                    tasks[index] = task;
+                    await this.save(tasks);
+                    this.logSync(`🔄 Task updated: "${task.title}" by ${this.deviceId}`, 'toggle');
+                }
+            }
+
+            async getById(id) {
+                const tasks = await this.getAll();
+                return tasks.find(t => t.id === id) || null;
+            }
+
+            handleExternalSync() {
+                this.logSync(`📨 External sync detected - updating UI`, 'sync');
+                // Trigger UI refresh in both panels
+                renderTasks();
+            }
+
+            logSync(message, type = 'sync') {
+                const timestamp = new Date().toLocaleTimeString();
+                const logElement = document.getElementById('sync-log');
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                entry.innerHTML = `<span style="color: #9ca3af;">[${timestamp}]</span> ${message}`;
+                logElement.appendChild(entry);
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+        }
+
+        // Use cases (mirror application layer)
+        class CreateTaskUseCase {
+            constructor(repository) {
+                this.repo = repository;
+            }
+
+            async execute(input) {
+                const task = new Task(input.title, undefined, input.description);
+                await this.repo.add(task);
+                return task;
+            }
+        }
+
+        class ToggleTaskUseCase {
+            constructor(repository) {
+                this.repo = repository;
+            }
+
+            async execute(taskId) {
+                const task = await this.repo.getById(taskId);
+                if (!task) {
+                    throw new Error('Task not found');
+                }
+                const toggledTask = task.toggle();
+                await this.repo.update(toggledTask);
+                return toggledTask;
+            }
+        }
+
+        // Global state
+        let repository1, repository2;
+        let createUseCase1, createUseCase2;
+        let toggleUseCase1, toggleUseCase2;
+
+        // Initialize demo
+        function initDemo() {
+            // Initialize repositories for both "devices"
+            repository1 = new BrowserSyncRepository('Device-1');
+            repository2 = new BrowserSyncRepository('Device-2');
+
+            // Initialize use cases
+            createUseCase1 = new CreateTaskUseCase(repository1);
+            createUseCase2 = new CreateTaskUseCase(repository2);
+            toggleUseCase1 = new ToggleTaskUseCase(repository1);
+            toggleUseCase2 = new ToggleTaskUseCase(repository2);
+
+            // Setup event listeners
+            setupEventListeners();
+
+            // Initial render
+            renderTasks();
+
+            // Log initialization
+            repository1.logSync('🚀 Browser file-sync demo initialized');
+            repository1.logSync('📱 Multi-device synchronization active');
+        }
+
+        function setupEventListeners() {
+            // Device 1 form
+            document.getElementById('task-form-1').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await handleCreateTask(1);
+            });
+
+            // Device 2 form
+            document.getElementById('task-form-2').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await handleCreateTask(2);
+            });
+        }
+
+        async function handleCreateTask(deviceNumber) {
+            const titleInput = document.getElementById(`task-title-${deviceNumber}`);
+            const descInput = document.getElementById(`task-description-${deviceNumber}`);
+            
+            const title = titleInput.value.trim();
+            const description = descInput.value.trim();
+
+            if (!title) return;
+
+            try {
+                const useCase = deviceNumber === 1 ? createUseCase1 : createUseCase2;
+                await useCase.execute({
+                    title,
+                    description: description || undefined
+                });
+
+                // Clear form
+                titleInput.value = '';
+                descInput.value = '';
+
+                // Refresh UI
+                renderTasks();
+            } catch (error) {
+                console.error('Error creating task:', error);
+            }
+        }
+
+        async function handleToggleTask(taskId, deviceNumber) {
+            try {
+                const useCase = deviceNumber === 1 ? toggleUseCase1 : toggleUseCase2;
+                await useCase.execute(taskId);
+                renderTasks();
+            } catch (error) {
+                console.error('Error toggling task:', error);
+            }
+        }
+
+        async function renderTasks() {
+            // Get tasks (both repositories should have the same data due to sync)
+            const tasks = await repository1.getAll();
+
+            // Render for both devices
+            renderTasksForDevice(tasks, 1);
+            renderTasksForDevice(tasks, 2);
+        }
+
+        function renderTasksForDevice(tasks, deviceNumber) {
+            const listElement = document.getElementById(`task-list-${deviceNumber}`);
+            
+            if (tasks.length === 0) {
+                listElement.innerHTML = '<li class="empty-state">No tasks yet. Create your first task above!</li>';
+                return;
+            }
+
+            listElement.innerHTML = tasks.map(task => `
+                <li class="task-item ${task.completed ? 'completed' : ''}">
+                    <input 
+                        type="checkbox" 
+                        class="task-checkbox"
+                        ${task.completed ? 'checked' : ''}
+                        onchange="handleToggleTask('${task.id}', ${deviceNumber})"
+                    >
+                    <div class="task-text ${task.completed ? 'completed' : ''}">
+                        <strong>${escapeHtml(task.title)}</strong>
+                        ${task.description ? `<br><small>${escapeHtml(task.description)}</small>` : ''}
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Demo controls
+        function clearLog() {
+            document.getElementById('sync-log').innerHTML = '';
+        }
+
+        function simulateExternalChange() {
+            // Simulate an external change by directly modifying localStorage
+            const currentData = JSON.parse(localStorage.getItem('task11_sync_data') || '{"tasks":[]}');
+            const newTask = new Task(`External Task ${Date.now()}`);
+            currentData.tasks.push(newTask);
+            currentData.lastSync = new Date().toISOString();
+            currentData.syncedBy = 'External-Device';
+            
+            localStorage.setItem('task11_sync_data', JSON.stringify(currentData));
+            
+            // This will trigger the storage event and update the UI
+            repository1.logSync('🌐 External device added a task', 'sync');
+        }
+
+        function openNewTab() {
+            const newWindow = window.open(window.location.href, '_blank');
+            repository1.logSync('🆕 New tab opened - sync will be shared', 'sync');
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initDemo);
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            repository1.logSync('👋 Tab closing - sync preserved');
+        });
+    </script>
+</body>
+</html>

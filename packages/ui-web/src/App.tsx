@@ -1,40 +1,60 @@
-import { useState } from 'react'
-
-interface Task {
-  id: string
-  title: string
-  completed: boolean
-}
+import React, { useState, useEffect } from 'react'
+import { Task } from 'task11-domain'
+import { CreateTaskUseCase } from 'task11-application'
+import { ToggleTaskUseCase } from 'task11-application'
+import { InMemoryTaskRepository } from 'task11-shared'
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTaskTitle, setNewTaskTitle] = useState('')
+  const [newTaskDescription, setNewTaskDescription] = useState('')
+  const [repository] = useState(() => new InMemoryTaskRepository())
+  const [createTaskUseCase] = useState(() => new CreateTaskUseCase(repository))
+  const [toggleTaskUseCase] = useState(() => new ToggleTaskUseCase(repository))
 
-  const handleCreateTask = (e: React.FormEvent) => {
+  // Load tasks from repository on mount
+  useEffect(() => {
+    const loadTasks = async () => {
+      const allTasks = await repository.getAll()
+      setTasks(allTasks)
+    }
+    loadTasks()
+  }, [repository])
+
+  const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!newTaskTitle.trim()) {
       return
     }
 
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title: newTaskTitle.trim(),
-      completed: false
+    try {
+      await createTaskUseCase.execute({
+        title: newTaskTitle.trim(),
+        description: newTaskDescription.trim() || undefined
+      })
+      
+      // Refresh tasks from repository
+      const allTasks = await repository.getAll()
+      setTasks(allTasks)
+      
+      setNewTaskTitle('')
+      setNewTaskDescription('')
+    } catch (error) {
+      // Error handling - could be enhanced with user notifications
     }
-
-    setTasks(prev => [...prev, newTask])
-    setNewTaskTitle('')
   }
 
-  const handleToggleTask = (taskId: string) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === taskId 
-          ? { ...task, completed: !task.completed }
-          : task
-      )
-    )
+  const handleToggleTask = async (taskId: string) => {
+    try {
+      await toggleTaskUseCase.execute(taskId)
+      
+      // Refresh tasks from repository
+      const allTasks = await repository.getAll()
+      setTasks(allTasks)
+    } catch (error) {
+      // Error handling - could be enhanced with user notifications
+    }
   }
 
   return (
@@ -45,6 +65,7 @@ function App() {
       fontFamily: 'Arial, sans-serif',
       minHeight: '100vh'
     }}>
+      
       <h1 style={{ 
         color: '#2563eb', 
         fontSize: '2rem', 

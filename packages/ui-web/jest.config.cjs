@@ -7,16 +7,33 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   collectCoverageFrom: [
     'src/**/*.ts',
+    'src/**/*.tsx',
     '!src/**/*.d.ts',
     '!src/index.ts',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.json',
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+        target: 'ES2020',
+        module: 'CommonJS',
+        moduleResolution: 'node',
+      }
     }],
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+      }
+    }
+  }
 };
