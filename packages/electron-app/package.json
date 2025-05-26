@@ -6,15 +6,18 @@
   "scripts": {
     "start": "electron .",
     "dev": "tsc && electron .",
-    "build": "tsc",
+    "build": "tsc && vite build",
     "watch": "tsc -w",
     "lint": "eslint -c ../../.eslintrc.js --ext .ts ./src",
     "renderer:dev": "vite",
     "renderer:build": "vite build",
+    "pretest": "npm --prefix ../infrastructure run build",
     "test": "jest",
-    "e2e": "npx playwright test tests/e2e/e2e-ui-visible.spec.ts"
+    "e2e": "npx playwright test tests/e2e/e2e-ui-visible.spec.ts",
+    "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,json,css,md}\""
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
     "electron-store": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,16 +27,17 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.27.1",
+    "@playwright/test": "*",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "playwright": "*",
     "ts-jest": "^29.3.4",
     "typescript": "^5.3.3",
-    "vite": "^6.3.5",
-    "@playwright/test": "*",
-    "playwright": "*"
+    "vite": "^6.3.5"
   }
 }

@@ -1,5 +1,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import { FileSyncManager } from 'task11-infrastructure';
+import { FileSyncConfigManager } from 'task11-infrastructure';
+import { Task } from 'task11-domain';
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -7,8 +10,8 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
-    }
+      contextIsolation: false,
+    },
   });
 
   // In development, load from localhost
@@ -21,7 +24,14 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+// Persistent file-based task storage
+const config = FileSyncConfigManager.getDefaultConfig();
+const syncManager = new FileSyncManager(config.storageDir);
+let repo: ReturnType<FileSyncManager['getRepository']>;
+
+app.whenReady().then(async () => {
+  await syncManager.start();
+  repo = syncManager.getRepository();
   createWindow();
 
   app.on('activate', () => {
@@ -39,13 +49,35 @@ app.on('window-all-closed', () => {
 
 // IPC handlers for task operations
 ipcMain.handle('get-tasks', async () => {
-  // TODO: Implement task retrieval
+  return repo.getAll();
 });
 
-ipcMain.handle('create-task', async (_, task) => {
-  // TODO: Implement task creation
-});
+ipcMain.handle(
+  'create-task',
+  async (_, task: { title: string; description?: string }) => {
+    const newTask = new Task(
+      task.title,
+      Math.random().toString(36).substring(2, 9),
+      task.description,
+      false
+    );
+    await repo.add(newTask);
+    return newTask;
+  }
+);
 
-ipcMain.handle('toggle-task', async (_, taskId) => {
-  // TODO: Implement task toggling
-}); 
+ipcMain.handle('toggle-task', async (_, taskId: string) => {
+  const allTasks = await repo.getAll();
+  const task = allTasks.find(t => t.id === taskId);
+  if (task) {
+    const updatedTask = new Task(
+      task.title,
+      task.id,
+      task.description,
+      !task.completed
+    );
+    await repo.update(updatedTask);
+    return updatedTask;
+  }
+  return null;
+});

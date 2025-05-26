@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
 export default defineConfig({
-  root: 'src',
+  base: './',
+  root: resolve(__dirname, 'src'),
   build: {
     outDir: '../build',
     emptyOutDir: true,
@@ -12,7 +13,8 @@ export default defineConfig({
       output: {
         entryFileNames: 'renderer.js',
         assetFileNames: '[name][extname]'
-      }
+      },
+      external: ['electron', 'fs', 'path']
     }
   },
   plugins: [react()],
