@@ -3,6 +3,10 @@ import * as path from 'path';
 import { Task } from '../../domain/src/entities/Task';
 import { ITaskRepository } from '../../shared/src/interfaces/ITaskRepository';
 
+interface FileSystemError extends Error {
+  code?: string;
+}
+
 export class FileTaskRepository implements ITaskRepository {
   private readonly dataDir: string;
   private readonly tasksFile: string;
@@ -43,15 +47,28 @@ export class FileTaskRepository implements ITaskRepository {
       const data = await fs.readFile(this.tasksFile, 'utf-8');
       const tasksData = JSON.parse(data);
       
-      // Convert plain objects back to Task instances
-      return tasksData.map((taskData: any) => 
-        new Task(taskData.title, taskData.id, taskData.description, taskData.completed)
-      );
+      // Validate that tasksData is an array
+      if (!Array.isArray(tasksData)) {
+        throw new Error(`Invalid tasks file format: expected array, got ${typeof tasksData}`);
+      }
+      
+      // Convert plain objects back to Task instances with validation
+      return tasksData.map((taskData: any, index: number) => {
+        if (!taskData || typeof taskData !== 'object') {
+          throw new Error(`Invalid task data at index ${index}: expected object, got ${typeof taskData}`);
+        }
+        if (!taskData.title || !taskData.id) {
+          throw new Error(`Invalid task data at index ${index}: missing required fields (title, id)`);
+        }
+        
+        return new Task(taskData.title, taskData.id, taskData.description, taskData.completed);
+      });
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      if ((error as FileSystemError).code === 'ENOENT') {
         // File doesn't exist yet, return empty array
         return [];
       }
+      // Re-throw parsing errors and other file system errors
       throw error;
     }
   }
