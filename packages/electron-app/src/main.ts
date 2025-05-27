@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import type { IpcMainInvokeEvent } from 'electron';
 import * as path from 'path';
 import { FileSyncManager } from 'task11-infrastructure';
 import { FileSyncConfigManager } from 'task11-infrastructure';
@@ -55,7 +56,7 @@ ipcMain.handle('get-tasks', async () => {
 
 ipcMain.handle(
   'create-task',
-  async (_, task: { title: string; description?: string }) => {
+  async (_event: IpcMainInvokeEvent, task: { title: string; description?: string }) => {
     const newTask = new Task(
       task.title,
       Math.random().toString(36).substring(2, 9),
@@ -67,7 +68,7 @@ ipcMain.handle(
   }
 );
 
-ipcMain.handle('toggle-task', async (_, taskId: string) => {
+ipcMain.handle('toggle-task', async (_event: IpcMainInvokeEvent, taskId: string) => {
   const allTasks = await repo.getAll();
   const task = allTasks.find(t => t.id === taskId);
   if (task) {
@@ -85,18 +86,23 @@ ipcMain.handle('toggle-task', async (_, taskId: string) => {
 
 // IPC handler to pick a storage folder
 ipcMain.handle('pick-storage-folder', async () => {
-  const result = await dialog.showOpenDialog({
-    properties: ['openDirectory'],
-    title: 'Select Storage Folder',
-  });
-  if (!result.canceled && result.filePaths.length > 0) {
-    currentStoragePath = result.filePaths[0];
+  const win = BrowserWindow.getFocusedWindow();
+  const result: any = win
+    ? await dialog.showOpenDialog(win, { properties: ['openDirectory'] })
+    : await dialog.showOpenDialog({ properties: ['openDirectory'] });
+  
+  // Handle both old (string[]) and new (OpenDialogReturnValue) API formats
+  const canceled = Array.isArray(result) ? false : result.canceled;
+  const filePaths = Array.isArray(result) ? result : result.filePaths;
+  
+  if (!canceled && filePaths.length > 0) {
+    currentStoragePath = filePaths[0];
     // Stop old syncManager if needed (not strictly necessary if no background process)
     // Create new syncManager and repo for the new path
     // (In a real app, you may want to debounce or queue this)
-    // @ts-ignore
-    if (syncManager && syncManager.stop) await syncManager.stop();
-    // @ts-ignore
+    if (syncManager && typeof (syncManager as any).stop === 'function') {
+      await (syncManager as any).stop();
+    }
     syncManager = new FileSyncManager(currentStoragePath);
     await syncManager.start();
     repo = syncManager.getRepository();
@@ -111,7 +117,7 @@ ipcMain.handle('get-storage-path', async () => {
 });
 
 // IPC handler to set storage path (for future use)
-ipcMain.handle('set-storage-path', async (_, newPath: string) => {
+ipcMain.handle('set-storage-path', async (_event: IpcMainInvokeEvent, newPath: string) => {
   currentStoragePath = newPath;
   // Optionally: update syncManager/repo here
   return currentStoragePath;

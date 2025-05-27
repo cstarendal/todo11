@@ -23,7 +23,10 @@
     }
   },
   "include": [
-    "packages/**/*"
+    "packages/domain/**/*",
+    "packages/application/**/*", 
+    "packages/infrastructure/**/*",
+    "packages/shared/**/*"
   ],
   "references": [
     { "path": "./packages/domain" },
