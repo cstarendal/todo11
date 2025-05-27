@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build": "tsc --build packages/domain packages/shared packages/application packages/infrastructure packages/platform-web",
+    "build": "tsc --build packages/domain packages/shared packages/application packages/infrastructure packages/electron-app",
     "lint": "eslint packages/*/src/**/*.ts",
     "format": "prettier --write packages/*/src/**/*.ts",
     "electron": "npm run build --workspace=task11-electron && npm run start --workspace=task11-electron",
@@ -38,7 +38,7 @@
     "prettier": "^3.5.3",
     "semantic-release": "^24.2.5",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.3.3"
+    "typescript": "5.3.3"
   },
   "lint-staged": {
     "*.{js,ts,tsx,jsx,json,css,md}": [

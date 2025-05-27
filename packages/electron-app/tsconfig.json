@@ -1,25 +1,21 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": false,
     "jsx": "react-jsx",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "rootDir": "src",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "composite": true,
+    "types": ["jest", "@testing-library/jest-dom", "node", "electron"]
   },
-  "include": ["src"]
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../domain" },
+    { "path": "../application" },
+    { "path": "../infrastructure" },
+    { "path": "../shared" }
+  ]
 } 

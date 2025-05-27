@@ -44,21 +44,13 @@ module.exports = {
       },
       moduleFileExtensions: ['ts', 'js'],
     },
-    {
-      displayName: 'platform-web',
-      preset: 'ts-jest',
-      testMatch: ['<rootDir>/packages/platform-web/**/*.test.ts'],
-      testEnvironment: 'jsdom',
-      transform: {
-        '^.+\\.ts$': 'ts-jest',
-      },
-      moduleFileExtensions: ['ts', 'js']
-    },
+
   ],
   collectCoverageFrom: [
     'packages/*/src/**/*.ts',
     '!packages/*/src/**/*.d.ts',
     '!packages/*/src/index.ts',
+    '!packages/electron-app/**/*',
     '!**/backup/**',
     '!**/*.backup.*',
   ],

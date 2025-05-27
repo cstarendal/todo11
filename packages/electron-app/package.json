@@ -29,16 +29,18 @@
     "@babel/preset-react": "^7.27.1",
     "@playwright/test": "*",
     "@testing-library/jest-dom": "^6.6.3",
+    "@types/electron": "^1.4.38",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.11.24",
     "@types/react": "^18.3.22",
     "@types/react-dom": "^18.3.7",
     "@types/testing-library__jest-dom": "^5.14.9",
     "@vitejs/plugin-react": "^4.5.0",
+    "electron": "^36.3.1",
     "identity-obj-proxy": "^3.0.0",
     "playwright": "*",
     "ts-jest": "^29.3.4",
-    "typescript": "^5.3.3",
+    "typescript": "5.3.3",
     "vite": "^6.3.5"
   }
 }
